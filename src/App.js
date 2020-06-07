@@ -13,57 +13,18 @@ function App() {
     misuraCorrente: ""
   });
 
-  const [ordineSandbox, setOrdine] = useState([
+  const [ordineSandbox, setOrdine] = useState(/*[
     [186, 199.2],
     [714, 139.2],
     [248, 119.2],
     [186, 109.2],
     [280, 89.2]
-  ]);
+  ]*/);
 
   const [
     pianoDiTaglioDaRenderizzare,
     setPiano
-  ] = useState(/*[
-    ["Barre utilizzate: ", 329, "Scarto totale: ", 3018.000000000002],
-    [
-      93,
-      "barre tagliate così: ",
-      [199.2, 199.2, 139.2, 109.2],
-      " con scarto: ",
-      3.2000000000000455
-    ],
-    [
-      155,
-      "barre tagliate così: ",
-      [139.2, 139.2, 139.2, 139.2, 89.2],
-      " con scarto: ",
-      4
-    ],
-    [
-      62,
-      "barre tagliate così: ",
-      [119.2, 119.2, 119.2, 109.2, 89.2, 89.2],
-      " con scarto: ",
-      4.7999999999999545
-    ],
-    [
-      15,
-      "barre tagliate così: ",
-      [119.2, 119.2, 119.2, 109.2, 109.2],
-      " con scarto: ",
-      74
-    ],
-    [
-      4,
-      "barre tagliate così: ",
-      [119.2, 119.2, 119.2, 119.2],
-      " con scarto: ",
-      173.2
-    ],
-    "(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",
-    [139.2, 89.2, 109.2, 119.2]
-  ]*/);
+  ] = useState();
 
   const [sfridi, setSfridi] = useState([]);
 
@@ -421,7 +382,7 @@ function App() {
 
   return (
     <div className="flex flex-wrap">
-      <div className="min-vh-100 bg-gray pt2 fl w-100-ns w-100-m w-40-l">
+      <div className="min-vh-100-l bg-gray pt2 fl w-100-ns w-100-m w-40-l">
         {/*ORDINE*/}
         <h1 className="pl2 pa1 bg-gold w-100">ORDINE</h1>
         <div className="pa3">
@@ -548,7 +509,7 @@ function App() {
         </div>
         {/*<small className="tc self-end">creato da Damiano nel 2020.</small>*/}
       </div>
-      <div className="bg-gold pt2 fl w-100-ns w-100-m w-40-l pa3">
+      <div className="bg-gold pt2 fl w-100 w-100-ns w-100-m w-40-l pa3">
         <h1 className="pl2 pa1">PIANO</h1>
         <p className="pl2 tc">
           <input

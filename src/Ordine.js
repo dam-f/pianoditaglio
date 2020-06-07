@@ -6,11 +6,20 @@ function creaComponenteMisura(mis) {
 }
 
 function Ordine(props) {
-  return (
-    <div className="bg-white pa2 br4 pb4 bb bw2">
-      {props.ordine.map(creaComponenteMisura)}
-    </div>
-  );
+  if (props.ordine) {
+    return (
+      <div className="bg-white pa2 br4 pb4 bb bw2">
+        {props.ordine.map(creaComponenteMisura)}
+      </div>
+    );
+  } else {
+    return(
+      <div>
+
+      </div>
+    )
+  }
+  
 }
 
 export default Ordine;
