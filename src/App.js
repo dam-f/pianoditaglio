@@ -13,7 +13,7 @@ function App() {
     misuraCorrente: ""
   });
 
-  const [ordineSandbox, setOrdine] = useState(/*[
+  const [ordineSandbox, setOrdine] = useState([]/*[
     [186, 199.2],
     [714, 139.2],
     [248, 119.2],
