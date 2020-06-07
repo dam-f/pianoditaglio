@@ -421,7 +421,7 @@ function App() {
 
   return (
     <div className="flex flex-wrap">
-      <div className="bg-gray pt2 fl w-100-ns w-100-m w-40-l">
+      <div className="min-vh-100 bg-gray pt2 fl w-100-ns w-100-m w-40-l">
         {/*ORDINE*/}
         <h1 className="pl2 pa1 bg-gold w-100">ORDINE</h1>
         <div className="pa3">
