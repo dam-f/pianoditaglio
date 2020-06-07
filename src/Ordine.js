@@ -6,7 +6,7 @@ function creaComponenteMisura(mis) {
 }
 
 function Ordine(props) {
-  if (props.ordine) {
+  if (props.ordine && props.ordine.length>0) {
     return (
       <div className="bg-white pa2 br4 pb4 bb bw2">
         {props.ordine.map(creaComponenteMisura)}

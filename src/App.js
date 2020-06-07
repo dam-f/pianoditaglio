@@ -126,6 +126,9 @@ function App() {
 
   //creare un comando per cui si può scegliere tra: soluzione con minor scarto (lasciando sfridi più lunghi di tot), soluzione con minor numero di tagli(per quando si ha fretta), soluzione che usa meno barre intere
   function pianoSandbox() {
+
+    let iterazioni = 0
+
     let ordineDaAnalizzare = ordineSandbox;
 
     let tutteLeComb = [];
@@ -182,9 +185,12 @@ function App() {
             tutteLeComb[i].reduce((a, b) => a + b, 0);
           for (let j = 0; j < arrayMisure.length; j++)
             if (ciStaAncora(arrayMisure[j], tutteLeComb[i], barraRimasta)) {
-              let newComb = tutteLeComb[i].slice(0);
-              newComb.push(arrayMisure[j]);
-              tutteLeComb.push(newComb);
+              iterazioni++
+              if(tutteLeComb[i].length>(k)) {
+                let newComb = tutteLeComb[i].slice(0);
+                newComb.push(arrayMisure[j]);
+                tutteLeComb.push(newComb);
+              }
             }
         }
       }
@@ -374,6 +380,8 @@ function App() {
     //console.log(pianoDiTaglioCompleto);
 
     setPiano(pianoDiTaglioCompleto);
+
+    console.log(iterazioni)
   }
 
   //RENDERING DELLA PAGINA
