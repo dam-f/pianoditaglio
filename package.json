@@ -7,6 +7,7 @@
     "starter"
   ],
   "main": "src/index.js",
+  "homepage": "./",
   "dependencies": {
     "lodash": "4.17.15",
     "react": "16.12.0",
