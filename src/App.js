@@ -179,9 +179,7 @@ function App() {
         for (let i = 0; i < tempArrCombLength; i++) {
           let barraRimasta =
             650 -
-            tutteLeComb[i].reduce(function(a, b) {
-              return a + b;
-            }, 0);
+            tutteLeComb[i].reduce((a, b) => a + b, 0);
           for (let j = 0; j < arrayMisure.length; j++)
             if (ciStaAncora(arrayMisure[j], tutteLeComb[i], barraRimasta)) {
               let newComb = tutteLeComb[i].slice(0);
