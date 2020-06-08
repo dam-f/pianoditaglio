@@ -31,7 +31,7 @@ function App() {
   const [profilo, setProfilo] = useState("AL/1");
 
   const [opzioni, setOpzioni] = useState({
-    maxScarto: 15,
+    maxScarto: 20,
     minSfrido: 65,
     larghezzaLama: 0.5
   });
@@ -119,6 +119,17 @@ function App() {
       steccheCorrente: "",
       misuraCorrente: ""
     });
+  }
+
+
+  function aggiungiPianoEsempio(event) {
+    setOrdine([
+      [186, 199.2],
+      [714, 139.2],
+      [248, 119.2],
+      [186, 109.2],
+      [280, 89.2]
+    ])
   }
 
   //FUNZIONONA PIANO DI TAGLIO
@@ -512,6 +523,21 @@ function App() {
               Info usata per calcolare il numero dei pacchi necessari:
             </small>
           </label>
+          <label className="w-third pa2">
+            <strong>DEBUG</strong>
+            <br />
+            <br />
+            <input
+              className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              name="opzioneDebug"
+              type="button"
+              value="SAMPLE"
+              onClick={aggiungiPianoEsempio}
+            />
+            <small id="name-desc" class="f6 db mb2">
+              Aggiunge un ordine di esempio. 
+            </small>
+          </label>
         </div>
         {/*<small className="tc self-end">creato da Damiano nel 2020.</small>*/}
       </div>
@@ -527,8 +553,10 @@ function App() {
           />
         </p>
         <Pianoditaglio piano={pianoDiTaglioDaRenderizzare} profilo={profilo} />
+        
       </div>
     </div>
+    
   );
 }
 
