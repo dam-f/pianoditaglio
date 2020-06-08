@@ -138,6 +138,7 @@ function App() {
   //creare un comando per cui si può scegliere tra: soluzione con minor scarto (lasciando sfridi più lunghi di tot), soluzione con minor numero di tagli(per quando si ha fretta), soluzione che usa meno barre intere
   function pianoSandbox() {
 
+    setPiano([])
     let iterazioni = 0
 
     let ordineDaAnalizzare = ordineSandbox;
@@ -176,6 +177,7 @@ function App() {
       combTemp.push(misura);
     }
 
+    let continua = true
     //questa si deve migliorare facendo in modo che vada ad operare solo sul livello di combo aggiunto in precedenza
     function creaTutteLeCombPossibili(arrayMisure) {
       let misPiccola = arrayMisure[arrayMisure.length - 1];
@@ -188,7 +190,8 @@ function App() {
       //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine
       let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
       //ad ogni giro si passa tutte le combiniazioni esistenti e aggiunge una combinazione per ogni misura dell'ordinead ognuna di esse.
-      for (let k = 0; k < numTagliMassimi; k++) {
+      if (continua) {
+        for (let k = 0; k < numTagliMassimi; k++) {
         let tempArrCombLength = tutteLeComb.length;
         for (let i = 0; i < tempArrCombLength; i++) {
           let barraRimasta =
@@ -197,12 +200,20 @@ function App() {
           for (let j = 0; j < arrayMisure.length; j++)
             if (ciStaAncora(arrayMisure[j], tutteLeComb[i], barraRimasta)) {
               iterazioni++
+              if (iterazioni === 1000000) {
+                if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
+                  continua = true;
+                } else {
+                  continua = false;
+                }
+              }
               if(tutteLeComb[i].length>(k)) {
                 let newComb = tutteLeComb[i].slice(0);
                 newComb.push(arrayMisure[j]);
                 tutteLeComb.push(newComb);
               }
             }
+          }
         }
       }
     }
@@ -241,6 +252,7 @@ function App() {
 
       let misuraDaTogliereDallOrdine;
 
+      
       //qui faccio prima un loop fittizio in cui decido quante barre servirebbero prima di esaurire una delle misure coinvolte, poi se l'ultima barra non è sfruttata completamente decido di tagliarne una di meno e aggiungere le stecche che mancavano al completamento ad un array da gestire poi in altro modo
       while (!hoFinitoDiTagliareUnaMisuraFittizia) {
         for (let i = 0; i < combFittizia.length; i++) {
