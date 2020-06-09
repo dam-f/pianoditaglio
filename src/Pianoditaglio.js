@@ -61,15 +61,15 @@ function Pianoditaglio(props) {
             <br />
           </p>
           {pianoPerRender.map(creaComponenteMisura)}
-          <p className="bb b--black-30 pl3 pr3">
-            Oh, e cerca tra gli sfridi qualcosa per tagliare ancora queste
+          {typeof piano[piano.length-2] === "string" && <p className="bb b--black-30 pl3 pr3">
+            Poi, cerca tra gli sfridi qualcosa per tagliare ancora queste
             stecche:
             <br />
             <br />
-            <strong>{piano[piano.length - 1].join(",  ")}</strong>
+            <strong>{piano[piano.length - 1].flat().join(' ')}</strong>
             <br />
             <br />
-          </p>
+          </p>}
         </div>
         {/*La statistica dello scarto sarà riattivata solo quando verrano contati solo gli scarti minori del maxScarto*/}
         {/*<p>Scarto totale sull'intero ordine: {scartoPianoTotale}</p>*/}
