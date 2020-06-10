@@ -301,6 +301,7 @@ function App() {
         combTemp = [];
         combTemp.push(misura);
       }
+      
 
       let continua = true
       //questa si deve migliorare facendo in modo che vada ad operare solo sul livello di combo aggiunto in precedenza
@@ -364,7 +365,10 @@ function App() {
             }, 0);
 
           if (scartoBestComb > scartoThisComb) {
-            bestComb = [allCombs[i], scartoThisComb];
+            //QUESTO SORT NON FUNZIONA????
+            bestComb = [allCombs[i].sort(function(a, b) {
+              return b[1] - a[1];
+            }), scartoThisComb];
           }
         }
         return bestComb;
@@ -493,19 +497,39 @@ function App() {
           return b[1] - a[1];
         });
 
-        creaTutteLeCombPossibili(arrayMisure);
+        
 
-        if (!continua) {
-          setPiano([])
-          return
-        }
-
-        combMigliore = trovaCombMigliore(tutteLeComb);
+        if (opzioni.mode !== "acra") {
+          creaTutteLeCombPossibili(arrayMisure);
+          if (!continua) {
+            setPiano([])
+            return
+          }
+          combMigliore = trovaCombMigliore(tutteLeComb);
 
         //console.log("combMigliore: ", combMigliore);
 
         quanteBarreConQuestaComb(combMigliore, ordine);
         //console.log(ordine);
+        } else {
+          for (let i = 0; i < arrayMisure.length; i++) {
+            // FARE LA FORMULA PER L'ACRA
+            let tempComb = [arrayMisure[i]];
+            let barraRimasta =
+              650 -
+              tempComb.reduce((a, b) => a + b, 0);
+            while (ciStaAncora(arrayMisure[i], tempComb, barraRimasta)) {
+              tempComb.push(arrayMisure[i])
+            }
+            combMigliore = [tempComb,(650-tempComb.reduce((a, b) => a + b, 0))]
+            quanteBarreConQuestaComb(combMigliore, ordine)
+          }
+        }
+        
+
+        
+
+        
 
         if (ordine.length > 0) {
           pianoDiTaglio(ordine);

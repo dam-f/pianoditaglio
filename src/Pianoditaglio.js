@@ -16,7 +16,9 @@ let exampleOutput = [
 
 function Pianoditaglio(props) {
   function creaComponenteMisura(comb) {
-    return <MisuraPiano combPiano={comb} />;
+    if (comb[0] !== 0) {
+      return <MisuraPiano combPiano={comb} />;
+    }
   }
 
   let profilo = props.profilo;
