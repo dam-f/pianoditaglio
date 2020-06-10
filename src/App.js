@@ -697,7 +697,7 @@ function App() {
               onChange={impostaOpzioni}
             />
             <small id="name-desc" class="f6 db mb2">
-              Larghezza lama (imposta 0.5 per alluminio, 0.2 per acciaio):
+              Larghezza lama (imposta 0.5 per alluminio, 0.2 per acciaio)
             </small>
           </label>
           <label className="w-third pa2">
