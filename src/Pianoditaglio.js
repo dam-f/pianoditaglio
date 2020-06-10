@@ -3,7 +3,7 @@ import MisuraPiano from "./MisuraPiano";
 
 /*
 let exampleOutput = [
-  [ "Barre utilizzate: ", 329, "Scarto totale: ", 3018.000000000002],
+  [ "Barre utilizzate: ", 329, "Scarto totale: ", 3018.000000000002, "menoScarto"],
   [ 93, "barre tagliate così: ",[199.2,199.2,139.2,109.2]," con scarto: ",3.2000000000000455],
   [ 155,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],
   [ 62, "barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],
@@ -39,8 +39,11 @@ function Pianoditaglio(props) {
     const scartoPianoTotale = piano[0][3];
     const pacchiNecessari = Math.floor(barrePianoUtilizzate / barreNeiPacchi);
     const barreNecessarieOltreAiPacchi = barrePianoUtilizzate % barreNeiPacchi;
+    const mode = piano[0][4]
 
     let pianoPerRender = piano.slice(0);
+
+    
 
     //console.log(pianoPerRender);
 
@@ -56,7 +59,7 @@ function Pianoditaglio(props) {
           <p className="tc bb b--black-30">
             BARRE NECESSARIE: <strong>{barrePianoUtilizzate}</strong> (
             <strong>{pacchiNecessari}</strong> pacchi e{" "}
-            <strong>{barreNecessarieOltreAiPacchi}</strong> stecche)
+            <strong>{barreNecessarieOltreAiPacchi}</strong> stecche) - Modalità: <strong>{mode}</strong>
             <br />
             <br />
           </p>

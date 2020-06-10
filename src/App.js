@@ -31,13 +31,16 @@ function App() {
   const [profilo, setProfilo] = useState("AL/1");
 
   const [opzioni, setOpzioni] = useState({
-    maxScarto: 20,
+    maxScarto: 25,
     minSfrido: 65,
     larghezzaLama: 0.5,
     mode: "menoScarto"
   });
 
   const [descMode, setDescMode] = useState("Criteri da usare per il calcolo del piano");
+
+
+  const [pianoRef, setPianoRef] = useState([])
 
   //FUNZIONI PER CAMBIARE LE VARIABILI NELLO STATO
 
@@ -95,11 +98,35 @@ function App() {
       });
     if (newValue === "menoBarre") {
       setDescMode("Usa meno barre possibili senza preoccuparsi dello scarto")
+      setOpzioni(prevValue => {
+        return {
+        maxScarto: 650,
+        minSfrido: 0,
+        larghezzaLama: prevValue.larghezzaLama,
+        mode: newValue
+        }
+      });
       //aggiungere set opzioni per cambiare i valori di max scarto e min scarto
     } else if (newValue === "acra") {
       setDescMode("Calcola solo le barre necessarie senza creare combinazioni di misura sulla stessa barra")
+      setOpzioni(prevValue => {
+        return {
+        maxScarto: 30,
+        minSfrido: 65,
+        larghezzaLama: prevValue.larghezzaLama,
+        mode: newValue
+        }
+      });
     } else if (newValue === "menoScarto") {
       setDescMode("Crea un piano di taglio che produca il minor scarto possibile")
+      setOpzioni(prevValue => {
+        return {
+        maxScarto: 25,
+        minSfrido: 65,
+        larghezzaLama: prevValue.larghezzaLama,
+        mode: newValue
+        }
+      });
     }
   }
 
@@ -153,13 +180,68 @@ function App() {
 
 
   function aggiungiPianoEsempio(event) {
-    setOrdine([
-      [186, 199.2],
-      [714, 139.2],
-      [248, 119.2],
-      [186, 109.2],
-      [280, 89.2]
-    ])
+    const newValue = event.target.value;
+    if (newValue === "sample1") {
+      setOrdine([
+        [182, 199.2],
+        [699, 139.2],
+        [235, 119.2],
+        [156, 109.2],
+        [273, 89.2]
+      ]);
+      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 1 - versione 0.3 - 18.929 iterazioni</strong><p></p><p><Pianoditaglio 
+        piano={[["Barre utilizzate: ",317,"Scarto totale: ",3413.6000000000013,"Meno scarto possibile"],[91,"barre tagliate così: ",[199.2,199.2,139.2,109.2]," con scarto: ",3.2000000000000455],[152,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[60,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[2,"barre tagliate così: ",[119.2,119.2,119.2,109.2,109.2]," con scarto: ",74],[12,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",89.2],["-",1,"x",109.2],["-",3,"x",119.2]]]}
+        profilo="AL/1"
+        mode="menoScarto"
+         />
+        </p>
+        </div>
+        )
+    } else if (newValue === "sample2") {
+      setOrdine([
+        [48, 196.7],
+        [32, 135.8],
+        [37, 81.2],
+        [48, 68.2],
+        [32, 62.2],
+        [37, 48.7]
+      ]);
+      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 2 - versione 0.3 - 8.940.344 iterazioni</strong><p></p><p><Pianoditaglio 
+        piano={[["Barre utilizzate: ",35,"Scarto totale: ",118.59999999999741,"Meno scarto possibile"],[16,"barre tagliate così: ",[196.7,135.8,135.8,62.2,48.7,68.2]," con scarto: ",2.599999999999909],[10,"barre tagliate così: ",[196.7,196.7,68.2,68.2,48.7,68.2]," con scarto: ",3.2999999999999545],[8,"barre tagliate così: ",[81.2,81.2,196.7,81.2,62.2,62.2,81.2]," con scarto: ",4.099999999999909],[1,"barre tagliate così: ",[196.7,196.7,48.7,196.7]," con scarto: ",11.200000000000045],[0,"barre tagliate così: ",[81.2,81.2,81.2,81.2,81.2,48.7,48.7,48.7,81.2]," con scarto: ",16.699999999999932],[0,"barre tagliate così: ",[48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7]," con scarto: ",114.30000000000007],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",68.2],["-",2,"x",196.7],["-",1,"x",81.2],["-",1,"x",48.7]]]}
+        profilo="AL/1"
+        mode="menoScarto"
+         />
+        </p>
+        </div>
+        )
+    } else if (newValue === "sample3") {
+      setOrdine([
+        [182, 199.2],
+        [699, 139.2],
+        [235, 119.2],
+        [156, 109.2],
+        [273, 89.2],
+        [159, 50],
+        [200, 35.1]
+      ]);
+      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE STRESS TEST - versione 0.3 - 35.697.301 iterazioni</strong><p></p><p><Pianoditaglio 
+        piano={[["Barre utilizzate: ",337,"Scarto totale: ",1782.8000000000018,"Meno scarto possibile"],[60,"barre tagliate così: ",[199.2,199.2,50,199.2]," con scarto: ",2.400000000000091],[99,"barre tagliate così: ",[139.2,139.2,139.2,50,35.1,35.1,109.2]," con scarto: ",3],[1,"barre tagliate così: ",[119.2,119.2,139.2,35.1,109.2,35.1,89.2]," con scarto: ",3.799999999999841],[100,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[56,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[20,"barre tagliate così: ",[119.2,119.2,119.2,89.2,89.2,89.2]," con scarto: ",24.799999999999955],[1,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",199.2],["-",3,"x",139.2],["-",3,"x",119.2]]]}
+        profilo="AL/1"
+        mode="menoScarto"
+         />
+        </p>
+        </div>
+        )
+    } else if (newValue === "sample4") {
+      setOrdine([
+        [182, 199.2],
+        [699, 139.2],
+        [235, 119.2],
+        [156, 109.2],
+        [273, 89.2]
+      ]);
+    }
+    
   }
 
   //FUNZIONONA PIANO DI TAGLIO
@@ -168,6 +250,19 @@ function App() {
   //creare un comando per cui si può scegliere tra: soluzione con minor scarto (lasciando sfridi più lunghi di tot), soluzione con minor numero di tagli(per quando si ha fretta), soluzione che usa meno barre intere
   function pianoSandbox() {
     if(ordineSandbox.length>0) {
+
+      // VARIABILI NON MONITORATE
+
+      let modalita;
+
+      if (opzioni.mode === "menoScarto") {
+      modalita = "Meno scarto possibile"
+      } else if (opzioni.mode === "menoBarre") {
+      modalita = "Meno barre possibili"
+       } else if (opzioni.mode === "acra") {
+      modalita = "Calcolo barre per acra"
+      }
+
       setPiano([])
       let iterazioni = 0
 
@@ -431,7 +526,8 @@ function App() {
           "Barre utilizzate: ",
           barreUtilizzate,
           "Scarto totale: ",
-          scartoTotale
+          scartoTotale,
+          modalita
         ]);
         pianoDiTaglioCompleto.push(
           "(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",
@@ -446,6 +542,8 @@ function App() {
       setPiano(pianoDiTaglioCompleto);
 
       console.log(iterazioni)
+
+      
     }
   }
 
@@ -553,7 +651,7 @@ function App() {
               </select>
             </fieldset>
             <small id="name-desc" class="f6 db mb2">
-              Info usata per calcolare il numero dei pacchi necessari:
+              Info usata per calcolare il numero dei pacchi necessari.
             </small>
           </label>
 
@@ -602,20 +700,29 @@ function App() {
               Larghezza lama (imposta 0.5 per alluminio, 0.2 per acciaio):
             </small>
           </label>
-          
           <label className="w-third pa2">
             <strong>DEBUG</strong>
             <br />
             <br />
-            <input
-              className="input-reset ba b--black-20 pa2 mb2 db w-100"
-              name="opzioneDebug"
-              type="button"
-              value="SAMPLE"
-              onClick={aggiungiPianoEsempio}
-            />
+            <fieldset
+              className="input-reset bw0 pa0 w-100"
+              onChange={aggiungiPianoEsempio}
+            >
+              <select
+                name="debug"
+                className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              > 
+                <option value="none" selected="selected"></option>
+                <option value="sample1">
+                  Sample 1
+                </option>
+                <option value="sample2">Sample 2</option>
+                <option value="sample3">Stress test</option>
+                <option value="sample4">Sample 4</option>
+              </select>
+            </fieldset>
             <small id="name-desc" class="f6 db mb2">
-              Aggiunge un ordine di esempio. 
+            Aggiunge un ordine di esempio.
             </small>
           </label>
         </div>
@@ -632,8 +739,9 @@ function App() {
             value="CREA PIANO"
           />
         </p>
-        <Pianoditaglio piano={pianoDiTaglioDaRenderizzare} profilo={profilo} />
-        
+        <Pianoditaglio piano={pianoDiTaglioDaRenderizzare} profilo={profilo} mode={opzioni.mode}/>
+        <br /><br />
+        {pianoRef}
       </div>
     </div>
     

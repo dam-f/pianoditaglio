@@ -2,6 +2,12 @@
 
 DA FARE ADESSO:
 
+- dopo aver scelto le combo migliori vanno messe in ordine di misura 
+
+- nel renderizzare il piano non si devono mostrare le combo che risultano con zero barre (vedi screenshot) 
+
+- opz debug sblocca altri tasti tra cui 3 o 4 ordini sample. se si sceglie un ordine sample nella parte del piano c'è un altro div con un piano hardcoded verificato (anche con excel) per confrontare i risultati 
+
 - funzione crea ordine di esempio (per debug)
 - la variabile predefinita del piano di taglio deve essere [] e sostituire il momento in cui viene creata nella funzione con un push, in modo da supportare questo: 
 - quando il contabarre scarta una misura, invece di fare un array con le misure scartate deve ricreare un secondo ordine su cui eseguire un nuovo piano di taglio
