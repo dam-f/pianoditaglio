@@ -33,8 +33,11 @@ function App() {
   const [opzioni, setOpzioni] = useState({
     maxScarto: 20,
     minSfrido: 65,
-    larghezzaLama: 0.5
+    larghezzaLama: 0.5,
+    mode: "menoScarto"
   });
+
+  const [descMode, setDescMode] = useState("Criteri da usare per il calcolo del piano");
 
   //FUNZIONI PER CAMBIARE LE VARIABILI NELLO STATO
 
@@ -46,19 +49,22 @@ function App() {
         return {
           maxScarto: newValue,
           minSfrido: prevValue.minSfrido,
-          larghezzaLama: prevValue.larghezzaLama
+          larghezzaLama: prevValue.larghezzaLama,
+          mode: prevValue.mode
         };
       } else if (inputName === "opzioneSfrido") {
         return {
           maxScarto: prevValue.maxScarto,
           minSfrido: newValue,
-          larghezzaLama: prevValue.larghezzaLama
+          larghezzaLama: prevValue.larghezzaLama,
+          mode: prevValue.mode
         };
       } else if (inputName === "opzioneLama") {
         return {
           maxScarto: prevValue.maxScarto,
           minSfrido: prevValue.minSfrido,
-          larghezzaLama: newValue
+          larghezzaLama: newValue,
+          mode: prevValue.mode
         };
       }
     });
@@ -76,6 +82,30 @@ function App() {
       setProfilo("AL/2");
     }
   }
+
+  function impostaMode(event) {
+    const newValue = event.target.value;
+    setOpzioni(prevValue => {
+        return {
+            maxScarto: prevValue.maxScarto,
+            minSfrido: prevValue.minSfrido,
+            larghezzaLama: prevValue.larghezzaLama,
+            mode: newValue
+          };
+      });
+    if (newValue === "menoBarre") {
+      setDescMode("Usa meno barre possibili senza preoccuparsi dello scarto")
+      //aggiungere set opzioni per cambiare i valori di max scarto e min scarto
+    } else if (newValue === "acra") {
+      setDescMode("Calcola solo le barre necessarie senza creare combinazioni di misura sulla stessa barra")
+    } else if (newValue === "menoScarto") {
+      setDescMode("Crea un piano di taglio che produca il minor scarto possibile")
+    }
+  }
+
+  
+
+
 
   function impostaMisuraCorrente(event) {
     const newValue = event.target.value;
@@ -479,6 +509,55 @@ function App() {
         <h1 className="pl2 pa1 bg-gold w-100">OPZIONI</h1>
         <div className="flex items-start flex-wrap pa3">
           <label className="w-third pa2">
+            <strong>MODALITÀ</strong>
+            <br />
+            <br />
+            <fieldset
+              className="input-reset bw0 pa0 w-100"
+              onChange={impostaMode}
+            >
+              <select
+                name="mode"
+                className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              >
+                <option value="menoScarto" selected="selected">
+                  Scarto minore
+                </option>
+                <option value="menoBarre">Meno barre</option>
+                <option value="acra">Acra</option>
+              </select>
+            </fieldset>
+            <small id="name-desc" class="f6 db mb2">
+              {descMode}
+            </small>
+          </label>
+
+          <label className="w-third pa2">
+            <strong>PROFILO</strong>
+            <br />
+            <br />
+            <fieldset
+              className="input-reset bw0 pa0 w-100"
+              onChange={impostaProfilo}
+            >
+              <select
+                name="profilo"
+                className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              >
+                <option value="AL/1" selected="selected">
+                  AL/1
+                </option>
+                <option value="AC/6">AC/6</option>
+                <option value="AL/2HD">AL/2 HD</option>
+                <option value="AL/2">AL/2</option>
+              </select>
+            </fieldset>
+            <small id="name-desc" class="f6 db mb2">
+              Info usata per calcolare il numero dei pacchi necessari:
+            </small>
+          </label>
+
+          <label className="w-third pa2">
             <strong>SCARTO MAX</strong>
             <br />
             <br />
@@ -523,30 +602,7 @@ function App() {
               Larghezza lama (imposta 0.5 per alluminio, 0.2 per acciaio):
             </small>
           </label>
-          <label className="w-third pa2">
-            <strong>PROFILO</strong>
-            <br />
-            <br />
-            <fieldset
-              className="input-reset bw0 pa0 w-100"
-              onChange={impostaProfilo}
-            >
-              <select
-                name="profilo"
-                className="input-reset ba b--black-20 pa2 mb2 db w-100"
-              >
-                <option value="AL/1" selected="selected">
-                  AL/1
-                </option>
-                <option value="AC/6">AC/6</option>
-                <option value="AL/2HD">AL/2 HD</option>
-                <option value="AL/2">AL/2</option>
-              </select>
-            </fieldset>
-            <small id="name-desc" class="f6 db mb2">
-              Info usata per calcolare il numero dei pacchi necessari:
-            </small>
-          </label>
+          
           <label className="w-third pa2">
             <strong>DEBUG</strong>
             <br />
