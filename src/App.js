@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Ordine from "./Ordine";
 //import Opzioni from "./Opzioni";
 import Pianoditaglio from "./Pianoditaglio";
+import { cloneDeep } from 'lodash';
+//import _ from 'lodash';
 
 //AGGIUNGERE GESTIONE SFRIDI
 
@@ -250,7 +252,10 @@ function App() {
   //creare un comando per cui si può scegliere tra: soluzione con minor scarto (lasciando sfridi più lunghi di tot), soluzione con minor numero di tagli(per quando si ha fretta), soluzione che usa meno barre intere
   function pianoSandbox() {
     if(ordineSandbox.length>0) {
-
+      
+      let ordineDuplicato = cloneDeep(ordineSandbox)
+      
+      
       // VARIABILI NON MONITORATE
 
       let modalita;
@@ -265,8 +270,6 @@ function App() {
 
       setPiano([])
       let iterazioni = 0
-
-      let ordineDaAnalizzare = ordineSandbox;
 
       let tutteLeComb = [];
       let combTemp = [];
@@ -316,6 +319,7 @@ function App() {
         //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine
         let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
         //ad ogni giro si passa tutte le combiniazioni esistenti e aggiunge una combinazione per ogni misura dell'ordinead ognuna di esse.
+
         if (continua) {
           for (let k = 0; k < numTagliMassimi; k++) {
           let tempArrCombLength = tutteLeComb.length;
@@ -325,7 +329,9 @@ function App() {
               tutteLeComb[i].reduce((a, b) => a + b, 0);
             for (let j = 0; j < arrayMisure.length; j++)
               if (ciStaAncora(arrayMisure[j], tutteLeComb[i], barraRimasta)) {
-                iterazioni++
+                
+                if(tutteLeComb[i].length>(k)) {
+                  iterazioni++
                 if (iterazioni === 1000000) {
                   if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
                     continua = true;
@@ -339,7 +345,6 @@ function App() {
                     continua = false;
                   }
                 }
-                if(tutteLeComb[i].length>(k)) {
                   let newComb = tutteLeComb[i].slice(0);
                   newComb.push(arrayMisure[j]);
                   tutteLeComb.push(newComb);
@@ -378,11 +383,11 @@ function App() {
         let numBarreConQuestaComb = 0;
         let hoFinitoDiTagliareUnaMisura = false;
 
-        let combFittizia = comb[0].slice(0);
-        let ordineFittizio = [];
+        let combFittizia = cloneDeep(comb[0])/*comb[0].slice(0)*/;
+        let ordineFittizio = cloneDeep(ordine)/*[];
         for (let i = 0; i < ordine.length; i++) {
           ordineFittizio[i] = ordine[i].slice();
-        }
+        }*/
         let hoFinitoDiTagliareUnaMisuraFittizia = false;
 
         let misuraDaTogliereDallOrdine;
@@ -559,7 +564,7 @@ function App() {
         );
       }
 
-      pianoConStatistiche(ordineDaAnalizzare);
+      pianoConStatistiche(ordineDuplicato);
 
       //console.log(pianoDiTaglioCompleto);
 
