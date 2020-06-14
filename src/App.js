@@ -33,8 +33,14 @@ function App() {
 
   const [descMode, setDescMode] = useState("Criteri da usare per il calcolo del piano");
 
-
   const [pianoRef, setPianoRef] = useState([])
+
+  //modificare questo in false alla fine dei test
+  const [debugVisual, setDebugVisual] = useState(true)
+
+  const [input, setInput] = useState("input prova")
+
+  const [output, setOutput] = useState("output prova")
 
   //FUNZIONI PER CAMBIARE LE VARIABILI NELLO STATO
 
@@ -233,8 +239,157 @@ function App() {
     
   }
 
-  //FUNZIONE PRINCIPALE
+  function visualizzaOpzioniDebug() {
+    if (!debugVisual) {
+      setDebugVisual(true);
+    } else {
+      setDebugVisual(false);
+    }
+  }
+
+  function impostaInputManuale(event) {
+    const newValue = event.target.value;
+    setInput(newValue);
+  }
+
+  function impostaInputPredefinito(event) {
+    const newValue = event.target.value;
+    if (newValue === "inputTrovaTutteCombo") {
+      setInput();
+    } else if (newValue === "inputComboMigliore") {
+      setInput();
+    } else if (newValue === "inputQuanteBarre") {
+      setInput();
+    }
+  }
+
+  //PROGRAMMA PRINCIPALE
   
+  // VAR FUORI DA FUNZ
+  let iterazioni = 0;
+  let tutteLeComb = [];
+  let combTemp = [];
+  let combMigliore;
+  let pianoDiTaglioCompleto = [];
+  let barreUtilizzate = 0;
+  let scartoTotale = 0;
+  let barreDaRecuperareAllaFine = [];
+  let continua = true
+  let misuraDaTogliereDallOrdine;
+  let combFittizia;
+  let ordineFittizio;
+  let modalita;
+
+  // FUNZ FUORI DA FUNZ
+  function ciStaAncora(misura, comb, barraRimanente = 650) {
+    let lungTemp =
+      comb.reduce(function(a, b) {
+        return a + b;
+      }, 0) +
+      opzioni.larghezzaLama * comb.length;
+    if (
+      misura < 650 - lungTemp &&
+      (650 - lungTemp - misura > opzioni.minSfrido ||
+        650 - lungTemp - misura < opzioni.maxScarto)
+    ) {
+      //console.log("ci sta ancora!");
+      return true;
+    } else {
+      //console.log(`comb ${comb}: la misura ${misura} non sta più nei ${650-lungTemp} che rimangono alla barra, che era lunga ${barraRimanente}`);
+      return false;
+    }
+  }
+
+  function aggiungiCombConMisura(misura) {
+    combTemp = [];
+    combTemp.push(misura);
+  }
+
+  //questa si deve migliorare facendo in modo che vada ad operare solo sul livello di combo aggiunto in precedenza
+  function creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi) {
+    if (inizialeOAvanzi === "iniziale") {
+      let misPiccola = arrayMisure[arrayMisure.length - 1];
+      let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
+      //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine
+
+      // PER OGNI MISURA CREO UNA NUOVA COMB
+      for (let i = 0; i < arrayMisure.length; i++) {
+        aggiungiCombConMisura(arrayMisure[i]);
+        tutteLeComb.push(combTemp);
+      }
+      
+      //ad ogni giro si passa tutte le combiniazioni esistenti e aggiunge una combinazione per ogni misura dell'ordinead ognuna di esse.
+      if (continua) {
+        //pre tot giri fissi
+        for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
+        let tempArrCombLength = tutteLeComb.length;
+        // per ogni comb esistente in precedenza
+          for (let i = 0; i < tempArrCombLength; i++) {
+            let combAttuale = tutteLeComb[i];
+            let barraRimasta =
+              650 -
+              combAttuale.reduce((a, b) => a + b, 0);
+            // per ogni misura dell'ordine  
+            for (let j = 0; j < arrayMisure.length; j++) {
+              let misuraOrdine = arrayMisure[j];
+
+              if (ciStaAncora(misuraOrdine, combAttuale, barraRimasta)) {
+                
+                if(combAttuale.length>(ondata)) {
+                  iterazioni++
+                    if (iterazioni === 1000000) {
+                      if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
+                        continua = true;
+                      } else {
+                        continua = false;
+                      }
+                    } else if (iterazioni === 5000000) {
+                      if (window.confirm("Ora sono cinque milioni di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
+                        continua = true;
+                      } else {
+                        continua = false;
+                      }
+                    }
+                  let newComb = combAttuale.slice(0);
+                  newComb.push(misuraOrdine);
+                  tutteLeComb.push(newComb);
+                  }
+              }
+            }
+          }
+          console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeComb.length);
+        }
+      }
+    }
+  }
+
+  function trovaCombMigliore(allCombs) {
+    let bestComb = [allCombs[0]];
+    for (let i = 0; i < allCombs.length; i++) {
+      let scartoBestComb =
+        650 -
+        bestComb[0].reduce(function(a, b) {
+          return a + b;
+        }, 0);
+      let scartoThisComb =
+        650 -
+        allCombs[i].reduce(function(a, b) {
+          return a + b;
+        }, 0);
+
+      if (scartoBestComb > scartoThisComb) {
+        //QUESTO SORT NON FUNZIONA????
+        bestComb = [allCombs[i]/*.sort(function(a, b) {
+          return b[1] - a[1];
+        })*/, scartoThisComb];
+      }
+    }
+    return bestComb;
+  }
+
+
+  //CREA PIANO
+
   function pianoSandbox() {
     if(ordineSandbox.length>0) {
       //clono l'ordine per lasciare l'originale inserito nell'altra sezione e pterlo consultare o rifare il piano con altre impostazioni
@@ -244,19 +399,14 @@ function App() {
       
       // VARIABILI NON MONITORATE
 
-      let iterazioni = 0;
-      let tutteLeComb = [];
-      let combTemp = [];
-      let combMigliore;
-      let pianoDiTaglioCompleto = [];
-      let barreUtilizzate = 0;
-      let scartoTotale = 0;
-      let barreDaRecuperareAllaFine = [];
-      let continua = true
-      let misuraDaTogliereDallOrdine;
-      let combFittizia;
-      let ordineFittizio;
-      let modalita;
+      iterazioni = 0;
+      tutteLeComb = [];
+      combTemp = [];
+      pianoDiTaglioCompleto = [];
+      barreUtilizzate = 0;
+      scartoTotale = 0;
+      barreDaRecuperareAllaFine = [];
+      continua = true
       //determino la modalità
       if (opzioni.mode === "menoScarto") {
       modalita = "Meno scarto possibile"
@@ -266,111 +416,12 @@ function App() {
       modalita = "Calcolo barre per acra"
       }
 
-      function ciStaAncora(misura, comb, barraRimanente = 650) {
-        let lungTemp =
-          comb.reduce(function(a, b) {
-            return a + b;
-          }, 0) +
-          opzioni.larghezzaLama * comb.length;
-        if (
-          misura < 650 - lungTemp &&
-          (650 - lungTemp - misura > opzioni.minSfrido ||
-            650 - lungTemp - misura < opzioni.maxScarto)
-        ) {
-          //console.log("ci sta ancora!");
-          return true;
-        } else {
-          //console.log(`comb ${comb}: la misura ${misura} non sta più nei ${650-lungTemp} che rimangono alla barra, che era lunga ${barraRimanente}`);
-          return false;
-        }
-      }
-
-      function aggiungiCombConMisura(misura) {
-        combTemp = [];
-        combTemp.push(misura);
-      }
+      
+      
         
-      //questa si deve migliorare facendo in modo che vada ad operare solo sul livello di combo aggiunto in precedenza
-      function creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi) {
-        if (inizialeOAvanzi === "iniziale") {
-          let misPiccola = arrayMisure[arrayMisure.length - 1];
-          let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
-          //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine
+      
 
-          // PER OGNI MISURA CREO UNA NUOVA COMB
-          for (let i = 0; i < arrayMisure.length; i++) {
-            aggiungiCombConMisura(arrayMisure[i]);
-            tutteLeComb.push(combTemp);
-          }
-          
-          //ad ogni giro si passa tutte le combiniazioni esistenti e aggiunge una combinazione per ogni misura dell'ordinead ognuna di esse.
-          if (continua) {
-            //pre tot giri fissi
-            for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
-            let tempArrCombLength = tutteLeComb.length;
-            // per ogni comb esistente in precedenza
-              for (let i = 0; i < tempArrCombLength; i++) {
-                let combAttuale = tutteLeComb[i];
-                let barraRimasta =
-                  650 -
-                  combAttuale.reduce((a, b) => a + b, 0);
-                // per ogni misura dell'ordine  
-                for (let j = 0; j < arrayMisure.length; j++) {
-                  let misuraOrdine = arrayMisure[j];
-
-                  if (ciStaAncora(misuraOrdine, combAttuale, barraRimasta)) {
-                    
-                    if(combAttuale.length>(ondata)) {
-                      iterazioni++
-                        if (iterazioni === 1000000) {
-                          if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                            continua = true;
-                          } else {
-                            continua = false;
-                          }
-                        } else if (iterazioni === 5000000) {
-                          if (window.confirm("Ora sono cinque milioni di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                            continua = true;
-                          } else {
-                            continua = false;
-                          }
-                        }
-                      let newComb = combAttuale.slice(0);
-                      newComb.push(misuraOrdine);
-                      tutteLeComb.push(newComb);
-                      }
-                  }
-                }
-              }
-              console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeComb.length);
-            }
-          }
-        }
-      }
-
-      function trovaCombMigliore(allCombs) {
-        let bestComb = [allCombs[0]];
-        for (let i = 0; i < allCombs.length; i++) {
-          let scartoBestComb =
-            650 -
-            bestComb[0].reduce(function(a, b) {
-              return a + b;
-            }, 0);
-          let scartoThisComb =
-            650 -
-            allCombs[i].reduce(function(a, b) {
-              return a + b;
-            }, 0);
-
-          if (scartoBestComb > scartoThisComb) {
-            //QUESTO SORT NON FUNZIONA????
-            bestComb = [allCombs[i]/*.sort(function(a, b) {
-              return b[1] - a[1];
-            })*/, scartoThisComb];
-          }
-        }
-        return bestComb;
-      }
+      
 
       function simulazioneTaglioComb(comb, ordinePerQuanteBarre) {
         let numBarreConQuestaCombSim = 0;
@@ -656,7 +707,50 @@ function App() {
       <div className="min-vh-100-l bg-gray pt2 fl w-100-ns w-100-m w-40-l">
         {/*ORDINE*/}
         <h1 className="pl2 pa1 bg-gold w-100">ORDINE</h1>
+        
         <div className="pa3">
+          {debugVisual && 
+          <div>
+            <div>
+              <h2>INPUT</h2>
+              <textarea
+                type="text"
+                size="50"
+                rows="5"
+                cols= "70"
+                value={input}
+                onChange={impostaInputManuale}          
+              />
+              <fieldset
+              className="input-reset bw0 pa0"
+              onChange={impostaInputPredefinito}
+              >
+              <select
+                name="inputPredefinito"
+                className="input-reset ba b--black-20 pa2 mb2 db"
+              > 
+                <option value="none" selected="selected">
+                  input predefiniti
+                </option>
+                <option value="inputTrovaTutteCombo">
+                  per trova tutte le combo
+                </option>
+                <option value="inputComboMigliore">per trova combo migliore</option>
+                <option value="inputQuanteBarre">per quante barre con questa combo</option>
+                <option value="sample4">Sample 4</option>
+              </select>
+            </fieldset>
+            </div>
+            <div>
+              <h2>OUTPUT</h2>
+              <p>
+                {output}
+              </p>
+              <br />
+              <br />
+            </div>
+          </div>
+        }
           <form
             className="bg- br3 flex items-end pa2
             "
@@ -803,7 +897,7 @@ function App() {
             </small>
           </label>
           <label className="w-third pa2">
-            <strong>DEBUG</strong>
+            <strong>SAMPLES</strong>
             <br />
             <br />
             <fieldset
@@ -827,6 +921,36 @@ function App() {
             Aggiunge un ordine di esempio.
             </small>
           </label>
+          <label className="w-third pa2">
+            <strong>FUNZIONI DEBUG</strong>
+            <br />
+            <br />
+            <input
+            className="input-reset ba b--black-20 pa2 mb2 db w-100"
+            type="button"
+            name="debugOptions"
+            onClick={visualizzaOpzioniDebug}
+            value="mostra/nascondi"
+            />
+          </label>
+          
+          {debugVisual && 
+            <label className="w-third pa2">
+            <strong>SCARTO MAX</strong>
+            <br />
+            <br />
+            <input
+              className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              name="opzioneScarto"
+              type="number"
+              value={opzioni.maxScarto}
+              onChange={impostaOpzioni}
+            />
+            <small id="name-desc" class="f6 db mb2">
+              Lunghezza massimo scarto
+            </small>
+            </label>
+          }
         </div>
         {/*<small className="tc self-end">creato da Damiano nel 2020.</small>*/}
       </div>
