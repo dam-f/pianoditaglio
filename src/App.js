@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import Ordine from "./Ordine";
 import Pianoditaglio from "./Pianoditaglio";
 import { cloneDeep } from 'lodash';
+//da togliere poi questo sotto:
+import { inputTutteComb } from "./tutteComb"
+
 
 //AGGIUNGERE GESTIONE SFRIDI
 
@@ -15,10 +18,7 @@ function App() {
 
   const [ordineSandbox, setOrdine] = useState([]);
 
-  const [
-    pianoDiTaglioDaRenderizzare,
-    setPiano
-  ] = useState();
+  const [ pianoDiTaglioDaRenderizzare, setPiano ] = useState();
 
   const [sfridi, setSfridi] = useState([]);
 
@@ -257,11 +257,12 @@ function App() {
     if (newValue === "inputTrovaTutteCombo") {
       setInput();
     } else if (newValue === "inputComboMigliore") {
-      setInput();
+      setInput(inputTutteComb);
     } else if (newValue === "inputQuanteBarre") {
       setInput();
     }
   }
+
 
   //PROGRAMMA PRINCIPALE
   
@@ -700,6 +701,16 @@ function App() {
     }
   }
 
+
+  
+  //FUNZIONI DEI TEST
+
+  function provaTrovaCombMigliore() {
+    setOutput(JSON.stringify(trovaCombMigliore(input)));
+  }
+
+
+
   //RENDERING DELLA PAGINA
 
   return (
@@ -743,9 +754,9 @@ function App() {
             </div>
             <div>
               <h2>OUTPUT</h2>
-              <p>
+              <pre>
                 {output}
-              </p>
+              </pre>
               <br />
               <br />
             </div>
@@ -936,20 +947,17 @@ function App() {
           
           {debugVisual && 
             <label className="w-third pa2">
-            <strong>SCARTO MAX</strong>
+            <strong>TROVA COMB MIGLIORE</strong>
             <br />
             <br />
             <input
-              className="input-reset ba b--black-20 pa2 mb2 db w-100"
-              name="opzioneScarto"
-              type="number"
-              value={opzioni.maxScarto}
-              onChange={impostaOpzioni}
+            className="input-reset ba b--black-20 pa2 mb2 db w-100"
+            type="button"
+            name="provaTrovaCombMigliore"
+            onClick={provaTrovaCombMigliore}
+            value="prova"
             />
-            <small id="name-desc" class="f6 db mb2">
-              Lunghezza massimo scarto
-            </small>
-            </label>
+          </label>
           }
         </div>
         {/*<small className="tc self-end">creato da Damiano nel 2020.</small>*/}
