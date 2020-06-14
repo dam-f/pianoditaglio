@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import Ordine from "./Ordine";
-//import Opzioni from "./Opzioni";
 import Pianoditaglio from "./Pianoditaglio";
 import { cloneDeep } from 'lodash';
-//import _ from 'lodash';
 
 //AGGIUNGERE GESTIONE SFRIDI
 
@@ -15,13 +13,7 @@ function App() {
     misuraCorrente: ""
   });
 
-  const [ordineSandbox, setOrdine] = useState([]/*[
-    [186, 199.2],
-    [714, 139.2],
-    [248, 119.2],
-    [186, 109.2],
-    [280, 89.2]
-  ]*/);
+  const [ordineSandbox, setOrdine] = useState([]);
 
   const [
     pianoDiTaglioDaRenderizzare,
@@ -241,26 +233,31 @@ function App() {
     
   }
 
-  //FUNZIONONA PIANO DI TAGLIO
-  //PER IL MOMENTO QUESTA CALCOLA LA SOLUZIONE CON MENO SCARTO
-
-  //creare un comando per cui si può scegliere tra: soluzione con minor scarto (lasciando sfridi più lunghi di tot), soluzione con minor numero di tagli(per quando si ha fretta), soluzione che usa meno barre intere
+  //FUNZIONE PRINCIPALE
+  
   function pianoSandbox() {
     if(ordineSandbox.length>0) {
+      //clono l'ordine per lasciare l'originale inserito nell'altra sezione e pterlo consultare o rifare il piano con altre impostazioni
+      let ordineDuplicato = cloneDeep(ordineSandbox);
+      let ordineDelleCoseCheAvanzano = [];
+      setPiano([]);
       
-      let ordineDuplicato = cloneDeep(ordineSandbox)
-      let ordineDelleCoseCheAvanzano = []
-      
-      console.log("ORDINE DUPLICATO");
-      console.log(ordineDuplicato);
-      console.log("ORDINE DELLE COSE CHE AVANZANO");
-      console.log(ordineDelleCoseCheAvanzano);
-      
-
       // VARIABILI NON MONITORATE
 
+      let iterazioni = 0;
+      let tutteLeComb = [];
+      let combTemp = [];
+      let combMigliore;
+      let pianoDiTaglioCompleto = [];
+      let barreUtilizzate = 0;
+      let scartoTotale = 0;
+      let barreDaRecuperareAllaFine = [];
+      let continua = true
+      let misuraDaTogliereDallOrdine;
+      let combFittizia;
+      let ordineFittizio;
       let modalita;
-
+      //determino la modalità
       if (opzioni.mode === "menoScarto") {
       modalita = "Meno scarto possibile"
       } else if (opzioni.mode === "menoBarre") {
@@ -268,19 +265,6 @@ function App() {
        } else if (opzioni.mode === "acra") {
       modalita = "Calcolo barre per acra"
       }
-
-      setPiano([])
-      let iterazioni = 0
-
-      let tutteLeComb = [];
-      let combTemp = [];
-      let combMigliore;
-      let pianoDiTaglioCompleto = [];
-
-      let barreUtilizzate = 0;
-      let scartoTotale = 0;
-
-      let barreDaRecuperareAllaFine = [];
 
       function ciStaAncora(misura, comb, barraRimanente = 650) {
         let lungTemp =
@@ -305,61 +289,61 @@ function App() {
         combTemp = [];
         combTemp.push(misura);
       }
-      
-
-      let continua = true
+        
       //questa si deve migliorare facendo in modo che vada ad operare solo sul livello di combo aggiunto in precedenza
-      function creaTutteLeCombPossibili(arrayMisure) {
-        let misPiccola = arrayMisure[arrayMisure.length - 1];
+      function creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi) {
+        if (inizialeOAvanzi === "iniziale") {
+          let misPiccola = arrayMisure[arrayMisure.length - 1];
+          let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
+          //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine
 
-        // PER OGNI MISURA CREO UNA NUOVA COMB
-        for (let i = 0; i < arrayMisure.length; i++) {
-          aggiungiCombConMisura(arrayMisure[i]);
-          tutteLeComb.push(combTemp);
-        }
-        //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine
-        let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
-        //ad ogni giro si passa tutte le combiniazioni esistenti e aggiunge una combinazione per ogni misura dell'ordinead ognuna di esse.
+          // PER OGNI MISURA CREO UNA NUOVA COMB
+          for (let i = 0; i < arrayMisure.length; i++) {
+            aggiungiCombConMisura(arrayMisure[i]);
+            tutteLeComb.push(combTemp);
+          }
+          
+          //ad ogni giro si passa tutte le combiniazioni esistenti e aggiunge una combinazione per ogni misura dell'ordinead ognuna di esse.
+          if (continua) {
+            //pre tot giri fissi
+            for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
+            let tempArrCombLength = tutteLeComb.length;
+            // per ogni comb esistente in precedenza
+              for (let i = 0; i < tempArrCombLength; i++) {
+                let combAttuale = tutteLeComb[i];
+                let barraRimasta =
+                  650 -
+                  combAttuale.reduce((a, b) => a + b, 0);
+                // per ogni misura dell'ordine  
+                for (let j = 0; j < arrayMisure.length; j++) {
+                  let misuraOrdine = arrayMisure[j];
 
-        if (continua) {
-          //pre tot giri fissi
-          for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
-          let tempArrCombLength = tutteLeComb.length;
-          // per ogni comb esistente in precedenza
-            for (let i = 0; i < tempArrCombLength; i++) {
-              let combAttuale = tutteLeComb[i];
-              let barraRimasta =
-                650 -
-                combAttuale.reduce((a, b) => a + b, 0);
-              // per ogni misura dell'ordine  
-              for (let j = 0; j < arrayMisure.length; j++) {
-                let misuraOrdine = arrayMisure[j];
-
-                if (ciStaAncora(misuraOrdine, combAttuale, barraRimasta)) {
-                  
-                  if(combAttuale.length>(ondata)) {
-                    iterazioni++
-                      if (iterazioni === 1000000) {
-                        if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                          continua = true;
-                        } else {
-                          continua = false;
+                  if (ciStaAncora(misuraOrdine, combAttuale, barraRimasta)) {
+                    
+                    if(combAttuale.length>(ondata)) {
+                      iterazioni++
+                        if (iterazioni === 1000000) {
+                          if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
+                            continua = true;
+                          } else {
+                            continua = false;
+                          }
+                        } else if (iterazioni === 5000000) {
+                          if (window.confirm("Ora sono cinque milioni di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
+                            continua = true;
+                          } else {
+                            continua = false;
+                          }
                         }
-                      } else if (iterazioni === 5000000) {
-                        if (window.confirm("Ora sono cinque milioni di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                          continua = true;
-                        } else {
-                          continua = false;
-                        }
+                      let newComb = combAttuale.slice(0);
+                      newComb.push(misuraOrdine);
+                      tutteLeComb.push(newComb);
                       }
-                    let newComb = combAttuale.slice(0);
-                    newComb.push(misuraOrdine);
-                    tutteLeComb.push(newComb);
-                    }
-                 }
-               }
+                  }
+                }
+              }
+              console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeComb.length);
             }
-            console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeComb.length);
           }
         }
       }
@@ -388,14 +372,11 @@ function App() {
         return bestComb;
       }
 
-      function quanteBarreConQuestaComb(comb, ordine, inizialeOAvanzi) {
-        let numBarreConQuestaComb = 0;
-        let hoFinitoDiTagliareUnaMisura = false;
-        let misuraDaTogliereDallOrdine;
-
+      function simulazioneTaglioComb(comb, ordinePerQuanteBarre) {
+        let numBarreConQuestaCombSim = 0;
         //clono le var per vedere quante barre mi servono. c'è di sicuro un modo meno stupido di vedere quante barre mi servono
-        let combFittizia = cloneDeep(comb[0])/*comb[0].slice(0)*/;
-        let ordineFittizio = cloneDeep(ordine)/*[];
+        combFittizia = cloneDeep(comb[0])/*comb[0].slice(0)*/;
+        ordineFittizio = cloneDeep(ordinePerQuanteBarre)/*[];
         for (let i = 0; i < ordine.length; i++) {
           ordineFittizio[i] = ordine[i].slice();
         }*/
@@ -403,26 +384,40 @@ function App() {
         //qui faccio prima un loop fittizio in cui decido quante barre servirebbero prima di esaurire una delle misure coinvolte, poi se l'ultima barra non è sfruttata completamente decido di tagliarne una di meno e aggiungere le stecche che mancavano al completamento ad un array da gestire poi in altro modo
         while (!hoFinitoDiTagliareUnaMisuraFittizia) {
           for (let i = 0; i < combFittizia.length; i++) {
+            let misuraDellaComb = combFittizia[i];
             for (let j = 0; j < ordineFittizio.length; j++) {
-              if (combFittizia[i] === ordineFittizio[j][1]) {
-                ordineFittizio[j][0] = ordineFittizio[j][0] - 1;
-                if (ordineFittizio[j][0] === 0) {
+              let misuraDellOrdine = ordineFittizio[j][1];
+              let quanteBarreServonoPerQuesta = ordineFittizio[j][0];
+              if (misuraDellaComb === misuraDellOrdine) {
+                quanteBarreServonoPerQuesta--;
+                if (quanteBarreServonoPerQuesta === 0) {
                   console.log(
-                    "Ho finito di tagliare la misura fittizia ",
-                    ordineFittizio[j][1]
+                    "Ho finito di tagliare la misura fittizia "+
+                    misuraDellOrdine
                   );
                   hoFinitoDiTagliareUnaMisuraFittizia = true;
-                  misuraDaTogliereDallOrdine = ordineFittizio[j][1];
+                  misuraDaTogliereDallOrdine = misuraDellOrdine;
                 }
               }
             }
           }
-          numBarreConQuestaComb++;
+          numBarreConQuestaCombSim++;
         }
+        return numBarreConQuestaCombSim
+      }
+
+      function quanteBarreConQuestaComb(comb, ordinePerQuanteBarre, inizialeOAvanzi) {
+        let numBarreConQuestaComb = 0;
+        let hoFinitoDiTagliareUnaMisura = false;
+        misuraDaTogliereDallOrdine = "";
+
+        numBarreConQuestaComb = simulazioneTaglioComb(comb, ordinePerQuanteBarre);
         
         if (inizialeOAvanzi === "iniziale") {
 
-          // va bene se tutte le barre previste per la combo sono sfruttate appieno, non va bene se l'ultima dà più stecche di quante ne servono
+          //TRASFORMARE IL "DECIDERE SE VA BENE" IN UNA FUNZ A PARTE
+
+          // va bene se tutte le barre previste per la combo sono sfruttate appieno, non va bene se l'ultima taglia più stecche di quante ne servono
           let nonVaBeneCosi = false;
 
           for (let i = 0; i < ordineFittizio.length; i++) {
@@ -431,8 +426,9 @@ function App() {
             }
           }
 
-          // se non va bene ne taglio una in meno
+          // se non va bene ne taglio una in meno e gestisco le stecche che avrei tagliato
           if (nonVaBeneCosi) {
+            
             numBarreConQuestaComb--;
 
             //se la misura esiste già nell'ordine degli avanzi aggiunge il numero di stecche richieste, altrimenti crea un nuovo ordine
@@ -456,14 +452,14 @@ function App() {
           if (!nonVaBeneCosi) {
             while (!hoFinitoDiTagliareUnaMisura) {
               for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordine.length; j++) {
-                  if (comb[0][i] === ordine[j][1]) {
-                    ordine[j][0] = ordine[j][0] - 1;
-                    if (ordine[j][0] === 0) {
-                      console.log("Ho finito di tagliare la misura ", ordine[j][1]);
+                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+                    if (ordinePerQuanteBarre[j][0] === 0) {
+                      console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
                       hoFinitoDiTagliareUnaMisura = true;
                       //COSA MOLTO PERICOLOSA:
-                      ordine.splice(j, 1);
+                      ordinePerQuanteBarre.splice(j, 1);
                     }
                   }
                 }
@@ -472,18 +468,18 @@ function App() {
           } else {
             for (let i = 0; i < numBarreConQuestaComb; i++) {
               for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordine.length; j++) {
-                  if (comb[0][i] === ordine[j][1]) {
-                    ordine[j][0] = ordine[j][0] - 1;
+                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
                   }
                 }
               }
             }
           }
           //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
-          for (let i = 0; i < ordine.length; i++) {
-            if (ordine[i][1] === misuraDaTogliereDallOrdine) {
-              ordine.splice(i, 1);
+          for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
+            if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
+              ordinePerQuanteBarre.splice(i, 1);
             }
           }        
         } else if (inizialeOAvanzi === "avanzi") {
@@ -508,14 +504,14 @@ function App() {
           if (!nonVaBeneCosi) {
             while (!hoFinitoDiTagliareUnaMisura) {
               for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordine.length; j++) {
-                  if (comb[0][i] === ordine[j][1]) {
-                    ordine[j][0] = ordine[j][0] - 1;
-                    if (ordine[j][0] === 0) {
-                      console.log("Ho finito di tagliare la misura ", ordine[j][1]);
+                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+                    if (ordinePerQuanteBarre[j][0] === 0) {
+                      console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
                       hoFinitoDiTagliareUnaMisura = true;
                       //COSA MOLTO PERICOLOSA:
-                      ordine.splice(j, 1);
+                      ordinePerQuanteBarre.splice(j, 1);
                     }
                   }
                 }
@@ -524,18 +520,18 @@ function App() {
           } else {
             for (let i = 0; i < numBarreConQuestaComb; i++) {
               for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordine.length; j++) {
-                  if (comb[0][i] === ordine[j][1]) {
-                    ordine[j][0] = ordine[j][0] - 1;
+                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
                   }
                 }
               }
             }
           }
           //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
-          for (let i = 0; i < ordine.length; i++) {
-            if (ordine[i][1] === misuraDaTogliereDallOrdine) {
-              ordine.splice(i, 1);
+          for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
+            if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
+              ordinePerQuanteBarre.splice(i, 1);
             }
           }            
         }
@@ -562,36 +558,30 @@ function App() {
 
       function pianoDiTaglio(ordine, inizialeOAvanzi) {
         //PIANO PER L'ORDINE IMMESSO
-        /* if (inizialeOAvanzi === "iniziale") {
-          tutteLeComb = [];
-        } */
 
         // creo un array solo delle misure
-        const arrayMisure = [];
+        let arrayMisure = [];
         ordine.forEach((e, i) => arrayMisure.push(e[1]));
 
-        // ORDINO L'ARRAY IN BASE ALLE MISURE
+        // ORDINO L'ARRAY DELLE MISURE IN MODO DECRESCENTE
         arrayMisure.sort(function(a, b) {
-        return b[1] - a[1];
+        return b/*[1]*/ - a/*[1]*/; /*non mi ricordo perché ci fosse l'[1]*/
         });
 
 
         if (opzioni.mode !== "acra") {
-          creaTutteLeCombPossibili(arrayMisure);
+          creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi);
           if (!continua) {
-            //QUESTO E' ANCORA DA CONTROLLARE
+            //VIA DI FUGA SE FAI ANNULLA - QUESTO E' ANCORA DA CONTROLLARE
             setPiano([])
             return false;
           }
           combMigliore = trovaCombMigliore(tutteLeComb);
-  
-          //console.log("combMigliore: ", combMigliore);
-  
           quanteBarreConQuestaComb(combMigliore, ordine, inizialeOAvanzi);
-          //console.log(ordine);
+
         } else {
+          //ACRA MODE - non combina misure diverse assieme
           for (let i = 0; i < arrayMisure.length; i++) {
-            // FARE LA FORMULA PER L'ACRA
             let tempComb = [arrayMisure[i]];
             let barraRimasta =
                 650 -
@@ -607,16 +597,6 @@ function App() {
         if (ordine.length > 0) {
             pianoDiTaglio(ordine);
         } 
-        
-        
-
-        //PROVONA
-
-        /*
-        if (ordineDelleCoseCheAvanzano.length>0) {
-          pianoDiTaglio(ordineDelleCoseCheAvanzano)
-        }
-        */
       }
 
       function statistichePiano(piano) {
@@ -624,47 +604,47 @@ function App() {
           barreUtilizzate = barreUtilizzate + piano[i][0];
           scartoTotale = scartoTotale + piano[i][4] * piano[i][0];
         }
-      }
-
-      function pianoConAvanziEStatistiche(ordine) {
-        
-        if(pianoDiTaglio(ordine, "iniziale") === false) {
-          return;
-        }
-        
-        
-        while (ordineDelleCoseCheAvanzano.length>0 ) {
-          if(pianoDiTaglio(ordineDelleCoseCheAvanzano, "avanzi") === false)
-          break;
-        }
-        
-        statistichePiano(pianoDiTaglioCompleto);
-
-
-
-        pianoDiTaglioCompleto.unshift([
+        return [
           "Barre utilizzate: ",
           barreUtilizzate,
           "Scarto totale: ",
           scartoTotale,
           modalita
-        ]);
-        pianoDiTaglioCompleto.push(
-          "(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",
-          barreDaRecuperareAllaFine
-        );
+        ]
       }
 
+      function pianoConAvanziEStatistiche(ordine) {
+        
+        // ESEGUO PIANO DI TAGLIO SULL'ORDINE INIZIALE
+        if(pianoDiTaglio(ordine, "iniziale") === false) {
+          // (PIANO DI FUGA SE FACCIO ANNULLA)
+          console.log("ESCO DIBRUTTO DALLA FUNZ INIZIALE")
+          return;
+        }
+        
+        console.log("ORDINE DELLE COSE CHE AVANZANO: "+ordineDelleCoseCheAvanzano);
+        
+        // ESEGUO PIANO DI TAGLIO SU STECCHE RIMANENTI
+        while (ordineDelleCoseCheAvanzano.length>0 ) {
+          console.log("ORDINE DELLE COSE CHE AVANZANO IN LOOP: "+ordineDelleCoseCheAvanzano);
+          //if(pianoDiTaglio(ordineDelleCoseCheAvanzano, "avanzi") === false)
+          //break;
+        }
+        
+        pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
+        /* pianoDiTaglioCompleto.push(
+          "(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",
+          barreDaRecuperareAllaFine
+        ); */
+      }
+     
       pianoConAvanziEStatistiche(ordineDuplicato);
-
-      //console.log(pianoDiTaglioCompleto);
- 
 
       setPiano(pianoDiTaglioCompleto);
 
       console.log("iterazioni: ",iterazioni)
 
-      console.log(ordineDelleCoseCheAvanzano)
+      console.log("ORDINE DELLE COSE CHE AVANZANO ALLA FINE DI TUTTO: "+ordineDelleCoseCheAvanzano)
       
     }
   }
