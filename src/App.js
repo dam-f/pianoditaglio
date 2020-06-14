@@ -499,7 +499,7 @@ function App() {
 
         // ORDINO L'ARRAY IN BASE ALLE MISURE
         arrayMisure.sort(function(a, b) {
-          return b[1] - a[1];
+          return b - a;
         });
 
         
