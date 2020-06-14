@@ -282,6 +282,11 @@ function App() {
       let barreDaRecuperareAllaFine = [];
 
       function ciStaAncora(misura, comb, barraRimanente = 650) {
+        /* if (iterazioni === 1260) {
+          console.log("MISURA IN CISTAANCORA", misura)
+          console.log("comb IN CISTA ANCORA", comb)
+          console.log("barrarimanente in CISTAANCORA", barraRimanente)
+        } */
         let lungTemp =
           comb.reduce(function(a, b) {
             return a + b;
@@ -501,8 +506,9 @@ function App() {
         arrayMisure.sort(function(a, b) {
           return b - a;
         });
-
-        
+        //console.log("ORDINE all'inizio stringato "+ ordine)
+        //console.log("ORDINE all'inizio", ordine)
+        //console.log("ARRAYMISURE all'inizio", arrayMisure)
 
         if (opzioni.mode !== "acra") {
           creaTutteLeCombPossibili(arrayMisure);
@@ -510,7 +516,9 @@ function App() {
             setPiano([])
             return
           }
+          //console.log("TUTTE LE COMB POSSIBILI OUTPUT", tutteLeComb)
           combMigliore = trovaCombMigliore(tutteLeComb);
+          //console.log("COMB MIGLIORE OUTPUT", combMigliore);
 
         //console.log("combMigliore: ", combMigliore);
 
