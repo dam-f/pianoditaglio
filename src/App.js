@@ -3,7 +3,8 @@ import Ordine from "./Ordine";
 import Pianoditaglio from "./Pianoditaglio";
 import { cloneDeep } from 'lodash';
 //da togliere poi questo sotto:
-import { inputTutteComb } from "./tutteComb"
+import { inputTutteComb } from "./tutteComb";
+//import "./logoANIMATO.svg";
 
 
 //AGGIUNGERE GESTIONE SFRIDI
