@@ -39,8 +39,13 @@ function App() {
   const [debugVisual, setDebugVisual] = useState(true)
 
   const [input, setInput] = useState("input prova")
+  const [input2, setInput2] = useState("input 2 prova")
 
   const [output, setOutput] = useState("output prova")
+
+  const [stato, setStato] = useState("")
+
+  const [pianiCalcolati, setPianiCalcolati] = useState(0);
 
   //FUNZIONI PER CAMBIARE LE VARIABILI NELLO STATO
 
@@ -252,15 +257,58 @@ function App() {
     setInput(newValue);
   }
 
+  function fanneUnArray() {
+    setInput(Array.from(input))
+  }
+
+  function outputToInput() {
+    setInput(output);
+  }
+
   function impostaInputPredefinito(event) {
     const newValue = event.target.value;
     if (newValue === "inputTrovaTutteCombo") {
-      setInput();
+      setInput([199.2, 139.2, 119.2, 109.2, 89.2]);
     } else if (newValue === "inputComboMigliore") {
       setInput(inputTutteComb);
     } else if (newValue === "inputQuanteBarre") {
-      setInput();
+      setInput([
+        [
+          119.2,
+          119.2,
+          119.2,
+          109.2,
+          89.2,
+          89.2
+        ],
+        4.7999999999999545
+      ]);
     }
+  }
+  
+  function impostaInputPredefinito2(event) {
+    const newValue = event.target.value;
+    if (newValue === "inputTrovaTutteCombo") {
+      setInput2([199.2, 139.2, 119.2, 109.2, 89.2]);
+    } else if (newValue === "inputComboMigliore") {
+      setInput2(inputTutteComb);
+    } else if (newValue === "inputQuanteBarre") {
+      setInput2([
+        [
+          119.2,
+          119.2,
+          119.2,
+          109.2,
+          89.2,
+          89.2
+        ],
+        4.7999999999999545
+      ]);
+    }
+  }
+
+  function outputToInput2() {
+    setInput2(output);
   }
 
 
@@ -280,6 +328,9 @@ function App() {
   let combFittizia;
   let ordineFittizio;
   let modalita;
+  let numeroDiVolteCheCalcoloIlPIano = 0;
+  let ordineDelleCoseCheAvanzano = [];
+
 
   // FUNZ FUORI DA FUNZ
   function ciStaAncora(misura, comb, barraRimanente = 650) {
@@ -323,6 +374,7 @@ function App() {
       if (continua) {
         //pre tot giri fissi
         for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
+        setStato(`Sto creando tutte le combinazioni possibili tra le misure dell'ordine: Passaggio ${ondata+1} su ${numTagliMassimi}`)
         let tempArrCombLength = tutteLeComb.length;
         // per ogni comb esistente in precedenza
           for (let i = 0; i < tempArrCombLength; i++) {
@@ -362,9 +414,11 @@ function App() {
         }
       }
     }
+    return tutteLeComb
   }
 
   function trovaCombMigliore(allCombs) {
+    setStato("Sto cercando la combinazione che restituisce meno scarto")
     let bestComb = [allCombs[0]];
     for (let i = 0; i < allCombs.length; i++) {
       let scartoBestComb =
@@ -388,6 +442,198 @@ function App() {
     return bestComb;
   }
 
+  function simulazioneTaglioComb(comb, ordinePerQuanteBarre) {
+    let numBarreConQuestaCombSim = 0;
+    //clono le var per vedere quante barre mi servono. c'è di sicuro un modo meno stupido di vedere quante barre mi servono
+    combFittizia = cloneDeep(comb[0])/*comb[0].slice(0)*/;
+    ordineFittizio = cloneDeep(ordinePerQuanteBarre)/*[];
+    for (let i = 0; i < ordine.length; i++) {
+      ordineFittizio[i] = ordine[i].slice();
+    }*/
+    let hoFinitoDiTagliareUnaMisuraFittizia = false;        
+    //qui faccio prima un loop fittizio in cui decido quante barre servirebbero prima di esaurire una delle misure coinvolte, poi se l'ultima barra non è sfruttata completamente decido di tagliarne una di meno e aggiungere le stecche che mancavano al completamento ad un array da gestire poi in altro modo
+    while (!hoFinitoDiTagliareUnaMisuraFittizia) {
+      for (let i = 0; i < combFittizia.length; i++) {
+        let misuraDellaComb = combFittizia[i];
+        for (let j = 0; j < ordineFittizio.length; j++) {
+          let misuraDellOrdine = ordineFittizio[j][1];
+          let quanteBarreServonoPerQuesta = ordineFittizio[j][0];
+          if (misuraDellaComb === misuraDellOrdine) {
+            quanteBarreServonoPerQuesta--;
+            if (quanteBarreServonoPerQuesta === 0) {
+              console.log(
+                "Ho finito di tagliare la misura fittizia "+
+                misuraDellOrdine
+              );
+              hoFinitoDiTagliareUnaMisuraFittizia = true;
+              misuraDaTogliereDallOrdine = misuraDellOrdine;
+            }
+          }
+        }
+      }
+      numBarreConQuestaCombSim++;
+    }
+    return numBarreConQuestaCombSim
+  }
+
+  function quanteBarre2(comb, ordine) {
+    let numBarreConQuestaComb = 0;
+
+
+
+
+
+  }
+
+  function quanteBarreConQuestaComb(comb, ordinePerQuanteBarre, inizialeOAvanzi) {
+    let numBarreConQuestaComb = 0;
+    let hoFinitoDiTagliareUnaMisura = false;
+    misuraDaTogliereDallOrdine = "";
+
+    numBarreConQuestaComb = simulazioneTaglioComb(comb, ordinePerQuanteBarre);
+    
+    if (inizialeOAvanzi === "iniziale") {
+
+      //TRASFORMARE IL "DECIDERE SE VA BENE" IN UNA FUNZ A PARTE
+
+      // va bene se tutte le barre previste per la combo sono sfruttate appieno, non va bene se l'ultima taglia più stecche di quante ne servono
+      let nonVaBeneCosi = false;
+
+      for (let i = 0; i < ordineFittizio.length; i++) {
+        if (ordineFittizio[i][0] < 0) {
+          nonVaBeneCosi = true;
+        }
+      }
+
+      // se non va bene ne taglio una in meno e gestisco le stecche che avrei tagliato
+      if (nonVaBeneCosi) {
+        
+        numBarreConQuestaComb--;
+
+        //se la misura esiste già nell'ordine degli avanzi aggiunge il numero di stecche richieste, altrimenti crea un nuovo ordine
+        for (let i = 0; i < combFittizia.length; i++) {
+
+          let eGiaNegliAvanzi = false
+          for (let j = 0; j < ordineDelleCoseCheAvanzano.length; j++) {
+            if (ordineDelleCoseCheAvanzano[j][1] === combFittizia[i][1]) {
+              ordineDelleCoseCheAvanzano[j][0]++;
+              eGiaNegliAvanzi = true;
+            }                 
+            if (!eGiaNegliAvanzi) {
+              ordineDelleCoseCheAvanzano.push([1,combFittizia[i]]);
+            }
+          }
+        
+        //ho tolto la roba che mandava le st in + in fondo all'ordine, se mi serve vado poi a ripr.
+        }            
+      }
+      //poi ripeto il ciclo che ho fatto prima in modo fittizio ma questa volta toglie effettivamente dal numero di stecche richiesto nell'ordine le stecche tagliate con questa combo
+      if (!nonVaBeneCosi) {
+        while (!hoFinitoDiTagliareUnaMisura) {
+          for (let i = 0; i < comb[0].length; i++) {
+            for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+              if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+                if (ordinePerQuanteBarre[j][0] === 0) {
+                  console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
+                  hoFinitoDiTagliareUnaMisura = true;
+                  //COSA MOLTO PERICOLOSA:
+                  ordinePerQuanteBarre.splice(j, 1);
+                }
+              }
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < numBarreConQuestaComb; i++) {
+          for (let i = 0; i < comb[0].length; i++) {
+            for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+              if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+              }
+            }
+          }
+        }
+      }
+      //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
+      for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
+        if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
+          ordinePerQuanteBarre.splice(i, 1);
+        }
+      }        
+    } else if (inizialeOAvanzi === "avanzi") {
+      let nonVaBeneCosi = false;
+
+      let misureDaTogliereDallaCombo = []
+
+      for (let i = 0; i < ordineFittizio.length; i++) {
+        if (ordineFittizio[i][0] < 0) {
+          nonVaBeneCosi = true;
+          misureDaTogliereDallaCombo.push(ordineFittizio[i][1])
+        }
+      }
+
+      // se non va bene ne taglio una in meno
+      if (nonVaBeneCosi) {
+        for (let i = 0; i < misureDaTogliereDallaCombo.length; i++) {
+          comb.splice(comb.indexOf(misureDaTogliereDallaCombo[i]))             
+        }
+      }
+      //poi ripeto il ciclo che ho fatto prima in modo fittizio ma questa volta toglie effettivamente dal numero di stecche richiesto nell'ordine le stecche tagliate con questa combo
+      if (!nonVaBeneCosi) {
+        while (!hoFinitoDiTagliareUnaMisura) {
+          for (let i = 0; i < comb[0].length; i++) {
+            for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+              if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+                if (ordinePerQuanteBarre[j][0] === 0) {
+                  console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
+                  hoFinitoDiTagliareUnaMisura = true;
+                  //COSA MOLTO PERICOLOSA:
+                  ordinePerQuanteBarre.splice(j, 1);
+                }
+              }
+            }
+          }
+        }
+      } else {
+        for (let i = 0; i < numBarreConQuestaComb; i++) {
+          for (let i = 0; i < comb[0].length; i++) {
+            for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+              if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+                ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+              }
+            }
+          }
+        }
+      }
+      //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
+      for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
+        if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
+          ordinePerQuanteBarre.splice(i, 1);
+        }
+      }            
+    }
+      
+              
+
+
+    
+
+    //TOLGO LA COMB DA TUTTE LE COMB
+    tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1)
+    
+
+    //CREO UNA RIGA NEL PIANO DI TAGLIO CON QUANTE BARRE DEVO TAGLIARE CON QUESTA COMBO, LE MISURE DELLA COMBO E LO SCARTO
+    pianoDiTaglioCompleto.push([
+      numBarreConQuestaComb,
+      "barre tagliate così: ",
+      comb[0],
+      " con scarto: ",
+      comb[1]
+    ]);
+  //TODO cos'è questa graffa qua sotto
+  }
 
   //CREA PIANO
 
@@ -395,7 +641,7 @@ function App() {
     if(ordineSandbox.length>0) {
       //clono l'ordine per lasciare l'originale inserito nell'altra sezione e pterlo consultare o rifare il piano con altre impostazioni
       let ordineDuplicato = cloneDeep(ordineSandbox);
-      let ordineDelleCoseCheAvanzano = [];
+      ordineDelleCoseCheAvanzano = [];
       setPiano([]);
       
       // VARIABILI NON MONITORATE
@@ -424,191 +670,11 @@ function App() {
 
       
 
-      function simulazioneTaglioComb(comb, ordinePerQuanteBarre) {
-        let numBarreConQuestaCombSim = 0;
-        //clono le var per vedere quante barre mi servono. c'è di sicuro un modo meno stupido di vedere quante barre mi servono
-        combFittizia = cloneDeep(comb[0])/*comb[0].slice(0)*/;
-        ordineFittizio = cloneDeep(ordinePerQuanteBarre)/*[];
-        for (let i = 0; i < ordine.length; i++) {
-          ordineFittizio[i] = ordine[i].slice();
-        }*/
-        let hoFinitoDiTagliareUnaMisuraFittizia = false;        
-        //qui faccio prima un loop fittizio in cui decido quante barre servirebbero prima di esaurire una delle misure coinvolte, poi se l'ultima barra non è sfruttata completamente decido di tagliarne una di meno e aggiungere le stecche che mancavano al completamento ad un array da gestire poi in altro modo
-        while (!hoFinitoDiTagliareUnaMisuraFittizia) {
-          for (let i = 0; i < combFittizia.length; i++) {
-            let misuraDellaComb = combFittizia[i];
-            for (let j = 0; j < ordineFittizio.length; j++) {
-              let misuraDellOrdine = ordineFittizio[j][1];
-              let quanteBarreServonoPerQuesta = ordineFittizio[j][0];
-              if (misuraDellaComb === misuraDellOrdine) {
-                quanteBarreServonoPerQuesta--;
-                if (quanteBarreServonoPerQuesta === 0) {
-                  console.log(
-                    "Ho finito di tagliare la misura fittizia "+
-                    misuraDellOrdine
-                  );
-                  hoFinitoDiTagliareUnaMisuraFittizia = true;
-                  misuraDaTogliereDallOrdine = misuraDellOrdine;
-                }
-              }
-            }
-          }
-          numBarreConQuestaCombSim++;
-        }
-        return numBarreConQuestaCombSim
-      }
 
-      function quanteBarreConQuestaComb(comb, ordinePerQuanteBarre, inizialeOAvanzi) {
-        let numBarreConQuestaComb = 0;
-        let hoFinitoDiTagliareUnaMisura = false;
-        misuraDaTogliereDallOrdine = "";
-
-        numBarreConQuestaComb = simulazioneTaglioComb(comb, ordinePerQuanteBarre);
-        
-        if (inizialeOAvanzi === "iniziale") {
-
-          //TRASFORMARE IL "DECIDERE SE VA BENE" IN UNA FUNZ A PARTE
-
-          // va bene se tutte le barre previste per la combo sono sfruttate appieno, non va bene se l'ultima taglia più stecche di quante ne servono
-          let nonVaBeneCosi = false;
-
-          for (let i = 0; i < ordineFittizio.length; i++) {
-            if (ordineFittizio[i][0] < 0) {
-              nonVaBeneCosi = true;
-            }
-          }
-
-          // se non va bene ne taglio una in meno e gestisco le stecche che avrei tagliato
-          if (nonVaBeneCosi) {
-            
-            numBarreConQuestaComb--;
-
-            //se la misura esiste già nell'ordine degli avanzi aggiunge il numero di stecche richieste, altrimenti crea un nuovo ordine
-            for (let i = 0; i < combFittizia.length; i++) {
-
-              let eGiaNegliAvanzi = false
-              for (let j = 0; j < ordineDelleCoseCheAvanzano.length; j++) {
-                if (ordineDelleCoseCheAvanzano[j][1] === combFittizia[i][1]) {
-                  ordineDelleCoseCheAvanzano[j][0]++;
-                  eGiaNegliAvanzi = true;
-                }                 
-                if (!eGiaNegliAvanzi) {
-                  ordineDelleCoseCheAvanzano.push([1,combFittizia[i]]);
-                }
-              }
-            
-            //ho tolto la roba che mandava le st in + in fondo all'ordine, se mi serve vado poi a ripr.
-            }            
-          }
-          //poi ripeto il ciclo che ho fatto prima in modo fittizio ma questa volta toglie effettivamente dal numero di stecche richiesto nell'ordine le stecche tagliate con questa combo
-          if (!nonVaBeneCosi) {
-            while (!hoFinitoDiTagliareUnaMisura) {
-              for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
-                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
-                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
-                    if (ordinePerQuanteBarre[j][0] === 0) {
-                      console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
-                      hoFinitoDiTagliareUnaMisura = true;
-                      //COSA MOLTO PERICOLOSA:
-                      ordinePerQuanteBarre.splice(j, 1);
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            for (let i = 0; i < numBarreConQuestaComb; i++) {
-              for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
-                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
-                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
-                  }
-                }
-              }
-            }
-          }
-          //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
-          for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
-            if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
-              ordinePerQuanteBarre.splice(i, 1);
-            }
-          }        
-        } else if (inizialeOAvanzi === "avanzi") {
-          let nonVaBeneCosi = false;
-
-          let misureDaTogliereDallaCombo = []
-
-          for (let i = 0; i < ordineFittizio.length; i++) {
-            if (ordineFittizio[i][0] < 0) {
-              nonVaBeneCosi = true;
-              misureDaTogliereDallaCombo.push(ordineFittizio[i][1])
-            }
-          }
-
-          // se non va bene ne taglio una in meno
-          if (nonVaBeneCosi) {
-            for (let i = 0; i < misureDaTogliereDallaCombo.length; i++) {
-              comb.splice(comb.indexOf(misureDaTogliereDallaCombo[i]))             
-            }
-          }
-          //poi ripeto il ciclo che ho fatto prima in modo fittizio ma questa volta toglie effettivamente dal numero di stecche richiesto nell'ordine le stecche tagliate con questa combo
-          if (!nonVaBeneCosi) {
-            while (!hoFinitoDiTagliareUnaMisura) {
-              for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
-                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
-                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
-                    if (ordinePerQuanteBarre[j][0] === 0) {
-                      console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
-                      hoFinitoDiTagliareUnaMisura = true;
-                      //COSA MOLTO PERICOLOSA:
-                      ordinePerQuanteBarre.splice(j, 1);
-                    }
-                  }
-                }
-              }
-            }
-          } else {
-            for (let i = 0; i < numBarreConQuestaComb; i++) {
-              for (let i = 0; i < comb[0].length; i++) {
-                for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
-                  if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
-                    ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
-                  }
-                }
-              }
-            }
-          }
-          //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
-          for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
-            if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
-              ordinePerQuanteBarre.splice(i, 1);
-            }
-          }            
-        }
-          
-                  
-
-
-        
-
-        //TOLGO LA COMB DA TUTTE LE COMB
-        tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1)
-        
-
-        //CREO UNA RIGA NEL PIANO DI TAGLIO CON QUANTE BARRE DEVO TAGLIARE CON QUESTA COMBO, LE MISURE DELLA COMBO E LO SCARTO
-        pianoDiTaglioCompleto.push([
-          numBarreConQuestaComb,
-          "barre tagliate così: ",
-          comb[0],
-          " con scarto: ",
-          comb[1]
-        ]);
-      //TODO cos'è questa graffa qua sotto
-      }
 
       function pianoDiTaglio(ordine, inizialeOAvanzi) {
+        numeroDiVolteCheCalcoloIlPIano++;
+        setPianiCalcolati(numeroDiVolteCheCalcoloIlPIano);
         //PIANO PER L'ORDINE IMMESSO
 
         // creo un array solo delle misure
@@ -652,6 +718,7 @@ function App() {
       }
 
       function statistichePiano(piano) {
+        setStato("Calcolo le statistiche")
         for (let i = 0; i < piano.length; i++) {
           barreUtilizzate = barreUtilizzate + piano[i][0];
           scartoTotale = scartoTotale + piano[i][4] * piano[i][0];
@@ -675,14 +742,17 @@ function App() {
         }
         
         console.log("ORDINE DELLE COSE CHE AVANZANO: "+ordineDelleCoseCheAvanzano);
-        
+        setStato("Ripeto il calcolo per le barre escluse dalle combo iniziali")
         // ESEGUO PIANO DI TAGLIO SU STECCHE RIMANENTI
+        let loop= 0
         while (ordineDelleCoseCheAvanzano.length>0 ) {
+          loop++
+          setStato("Passaggio "+loop+". Ripeto il calcolo per le barre escluse dalle combo iniziali")
           console.log("ORDINE DELLE COSE CHE AVANZANO IN LOOP: "+ordineDelleCoseCheAvanzano);
           //if(pianoDiTaglio(ordineDelleCoseCheAvanzano, "avanzi") === false)
           //break;
         }
-        
+        setStato("Aggiungo le statistiche")
         pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
         /* pianoDiTaglioCompleto.push(
           "(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",
@@ -706,10 +776,16 @@ function App() {
   //FUNZIONI DEI TEST
 
   function provaTrovaCombMigliore() {
-    setOutput(JSON.stringify(trovaCombMigliore(input)));
+    setOutput(/*JSON.stringify(*/trovaCombMigliore(input)/*)*/);
   }
 
+  function provaTrovaTutteComb() {
+    setOutput(/*JSON.stringify(*/creaTutteLeCombPossibili(input, "iniziale")/*)*/);
+  }
 
+  function provaQuanteBarre() {
+    setOutput(quanteBarreConQuestaComb(input,input2,"iniziale"))
+  }
 
   //RENDERING DELLA PAGINA
 
@@ -728,34 +804,100 @@ function App() {
                 type="text"
                 size="50"
                 rows="5"
-                cols= "70"
+                cols= "72"
                 value={input}
                 onChange={impostaInputManuale}          
               />
+              <div className="flex">
               <fieldset
-              className="input-reset bw0 pa0"
+              className="input-reset bw0 ma0 pa0"
               onChange={impostaInputPredefinito}
               >
               <select
                 name="inputPredefinito"
-                className="input-reset ba b--black-20 pa2 mb2 db"
+                className="input-reset ba b--black-20 pa2 db"
               > 
                 <option value="none" selected="selected">
                   input predefiniti
                 </option>
                 <option value="inputTrovaTutteCombo">
-                  per trova tutte le combo
+                  per trova tutte le combo (arrayMisure)
                 </option>
-                <option value="inputComboMigliore">per trova combo migliore</option>
-                <option value="inputQuanteBarre">per quante barre con questa combo</option>
+                <option value="inputComboMigliore">per trova combo migliore (tutteLeCombo)</option>
+                <option value="inputQuanteBarre">per quante barre con questa combo (combo)</option>
                 <option value="sample4">Sample 4</option>
               </select>
             </fieldset>
+            <input
+            className="input-reset ba b--black-20 pa2 ml2 db"
+            type="button"
+            name="switchInputOutput"
+            onClick={outputToInput}
+            value="Output to Input"
+            />
+            <input
+            className="input-reset ba b--black-20 pa2 ml2 db"
+            type="button"
+            name="textToArr"
+            onClick={fanneUnArray}
+            value="fanne un array"
+            />
+            </div>
+            </div>
+            <div>
+            <h2>INPUT 2</h2>
+              <p>{input2}</p>
+              {/*<textarea
+                type="text"
+                size="50"
+                rows="5"
+                cols= "72"
+                value={input}
+                onChange={impostaInputManuale}          
+              />*/}
+              <div className="flex">
+              <fieldset
+              className="input-reset bw0 ma0 pa0"
+              onChange={impostaInputPredefinito2}
+              >
+              <select
+                name="inputPredefinito"
+                className="input-reset ba b--black-20 pa2 db"
+              > 
+                <option value="none" selected="selected">
+                  input predefiniti
+                </option>
+                <option value="inputTrovaTutteCombo">
+                  per trova tutte le combo (arrayMisure)
+                </option>
+                <option value="inputComboMigliore">per trova combo migliore (tutteLeCombo)</option>
+                <option value="inputQuanteBarre">per quante barre con questa combo (combo)</option>
+                <option value="sample4">Sample 4</option>
+              </select>
+            </fieldset>
+            <input
+            className="input-reset ba b--black-20 pa2 ml2 db"
+            type="button"
+            name="switchInputOutput"
+            onClick={outputToInput2}
+            value="Output to Input"
+            />
+            <input
+            className="input-reset ba b--black-20 pa2 ml2 db"
+            type="button"
+            name="textToArr"
+            onClick={fanneUnArray}
+            value="fanne un array"
+            />
+            </div>
             </div>
             <div>
               <h2>OUTPUT</h2>
               <pre>
                 {output}
+              </pre>
+              <pre>
+                JSON STRINGIFIED: {JSON.stringify(output)}
               </pre>
               <br />
               <br />
@@ -946,18 +1088,47 @@ function App() {
           </label>
           
           {debugVisual && 
+            <>
             <label className="w-third pa2">
-            <strong>TROVA COMB MIGLIORE</strong>
-            <br />
-            <br />
-            <input
-            className="input-reset ba b--black-20 pa2 mb2 db w-100"
-            type="button"
-            name="provaTrovaCombMigliore"
-            onClick={provaTrovaCombMigliore}
-            value="prova"
-            />
-          </label>
+              <strong>TROVA TUTTE LE COMB</strong>
+              <br />
+              <br />
+              <input
+              className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              type="button"
+              name="provaTrovaTutteComb"
+              onClick={provaTrovaTutteComb}
+              value="prova"
+              />
+            </label>
+            <label className="w-third pa2">
+              <strong>TROVA COMB MIGLIORE</strong>
+              <br />
+              <br />
+              <input
+              className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              type="button"
+              name="provaTrovaCombMigliore"
+              onClick={provaTrovaCombMigliore}
+              value="prova"
+              />
+            </label>
+            <label className="w-third pa2">
+              <strong>QUANTE BARRE CON COMB</strong>
+              <br />
+              <br />
+              <input
+              className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              type="button"
+              name="provaQuanteBarre"
+              onClick={provaQuanteBarre}
+              value="prova"
+              />
+              <small id="name-desc" class="f6 db mb2">
+              Input: comb, ordine, inizialeOAvanzi
+              </small>
+            </label>
+            </>
           }
         </div>
         {/*<small className="tc self-end">creato da Damiano nel 2020.</small>*/}
@@ -973,6 +1144,14 @@ function App() {
             value="CREA PIANO"
           />
         </p>
+        <p className="tc b">
+          {stato}
+        </p>
+        { pianiCalcolati>0 &&
+          <p className="tc b">
+          Piani Calcolati: {pianiCalcolati}
+        </p>
+        }
         <Pianoditaglio piano={pianoDiTaglioDaRenderizzare} profilo={profilo} mode={opzioni.mode}/>
         <br /><br />
         {pianoRef}
