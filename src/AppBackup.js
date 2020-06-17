@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Ordine from "./Ordine";
 import Pianoditaglio from "./Pianoditaglio";
-import { cloneDeep, sum } from 'lodash';
+import { cloneDeep } from 'lodash';
 //da togliere poi questo sotto:
 import { inputTutteComb } from "./tutteComb";
 //import "./logoANIMATO.svg";
@@ -17,7 +17,7 @@ function App() {
     misuraCorrente: ""
   });
 
-  const [ordineImpostato, setOrdineImpostato] = useState([]);
+  const [ordineSandbox, setOrdine] = useState([]);
 
   const [ pianoDiTaglioDaRenderizzare, setPiano ] = useState();
 
@@ -31,8 +31,6 @@ function App() {
     larghezzaLama: 0.5,
     mode: "menoScarto"
   });
-
-  const [lungBarra, setLungBarra] = useState(650)
 
   const [descMode, setDescMode] = useState("Criteri da usare per il calcolo del piano");
 
@@ -79,11 +77,6 @@ function App() {
         };
       }
     });
-  }
-
-  function impostaLungBarra(event) {
-    let newValue = event.target.value;
-    setLungBarra(newValue);
   }
 
   function impostaProfilo(event) {
@@ -163,7 +156,7 @@ function App() {
 
   function aggiungiMisuraCorrente(event) {
     event.preventDefault();
-    setOrdineImpostato(prevValue => {
+    setOrdine(prevValue => {
       if (
         teloCorrente.steccheCorrente &&
         teloCorrente.misuraCorrente &&
@@ -190,7 +183,7 @@ function App() {
   function aggiungiPianoEsempio(event) {
     const newValue = event.target.value;
     if (newValue === "sample1") {
-      setOrdineImpostato([
+      setOrdine([
         [182, 199.2],
         [699, 139.2],
         [235, 119.2],
@@ -206,7 +199,7 @@ function App() {
         </div>
         )
     } else if (newValue === "sample2") {
-      setOrdineImpostato([
+      setOrdine([
         [48, 196.7],
         [32, 135.8],
         [37, 81.2],
@@ -223,7 +216,7 @@ function App() {
         </div>
         )
     } else if (newValue === "sample3") {
-      setOrdineImpostato([
+      setOrdine([
         [182, 199.2],
         [699, 139.2],
         [235, 119.2],
@@ -241,7 +234,7 @@ function App() {
         </div>
         )
     } else if (newValue === "sample4") {
-      setOrdineImpostato([
+      setOrdine([
         [182, 199.2],
         [699, 139.2],
         [235, 119.2],
@@ -319,21 +312,13 @@ function App() {
     setInput2(output);
   }
 
-  function ordineToInput() {
-    setInput(ordineImpostato)
-  }
-
 
   //PROGRAMMA PRINCIPALE
   
   // VAR FUORI DA FUNZ
-
-  let combTemp;
-  let arrayMisure;
-  
   let iterazioni = 0;
   let tutteLeComb = [];
-  
+  let combTemp = [];
   let combMigliore;
   let pianoDiTaglioCompleto = [];
   let barreUtilizzate = 0;
@@ -346,50 +331,35 @@ function App() {
   let modalita;
   let numeroDiVolteCheCalcoloIlPIano = 0;
   let ordineDelleCoseCheAvanzano = [];
-  
+
 
   // FUNZ FUORI DA FUNZ
-
-
-  
-
-  function ciStaAncora(misura, comb, barraRimanente = lungBarra) {
-    //return true or false
-    let lungTemp = sum(comb)+
+  function ciStaAncora(misura, comb, barraRimanente = 650) {
+    let lungTemp =
+      comb.reduce(function(a, b) {
+        return a + b;
+      }, 0) +
       opzioni.larghezzaLama * comb.length;
-    console.log(comb+" LUNGTEMP "+lungTemp)
     if (
-      misura < barraRimanente /*- lungTemp*/ &&
-      (barraRimanente - misura > opzioni.minSfrido ||
-        barraRimanente - misura < opzioni.maxScarto)
+      misura < 650 - lungTemp &&
+      (650 - lungTemp - misura > opzioni.minSfrido ||
+        650 - lungTemp - misura < opzioni.maxScarto)
     ) {
       //console.log("ci sta ancora!");
       return true;
     } else {
-      console.log(`comb ${comb}: la misura ${misura} non sta più nei ${lungBarra-lungTemp} che rimangono alla barra, che era lunga ${lungBarra}`);
+      //console.log(`comb ${comb}: la misura ${misura} non sta più nei ${650-lungTemp} che rimangono alla barra, che era lunga ${barraRimanente}`);
       return false;
     }
   }
 
   function aggiungiCombConMisura(misura) {
-    //riformulare questa in modo input-return senza effetti collaterali
     combTemp = [];
     combTemp.push(misura);
   }
 
-  function creaArrayDecrescenteMisure(ordine) {
-    //TEST: funziona
-    // creo un array solo delle misure
-    arrayMisure = [];
-    ordine.forEach(e => arrayMisure.push(e[1]));
-    // ORDINO L'ARRAY DELLE MISURE IN MODO DECRESCENTE
-    arrayMisure.sort(function(a, b) {
-      return b/*[1]*/ - a/*[1]*/; /*non mi ricordo perché ci fosse l'[1]*/
-      });
-    return arrayMisure;
-  }
-
-  function creaTutteLeCombPossibiliBackup(arrayMisure, inizialeOAvanzi) {
+  //questa si deve migliorare facendo in modo che vada ad operare solo sul livello di combo aggiunto in precedenza
+  function creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi) {
     if (inizialeOAvanzi === "iniziale") {
       let misPiccola = arrayMisure[arrayMisure.length - 1];
       let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
@@ -447,93 +417,21 @@ function App() {
     }
     return tutteLeComb
   }
-  
-  function creaTutteLeCombPossibili(arrayMisure) {
-    let tutteLeCombFunz = []
-    //RICHIEDE: arrayMisure in ordine decrescente
-    //l'if inizialeOAvanzi iniziava qui
-    let misPiccola = arrayMisure[arrayMisure.length - 1];
-    let numTagliMassimi = Math.round(lungBarra / (misPiccola + opzioni.larghezzaLama));
-    //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine (qui individuata con .length-1 perché si presume che l'array sia in ordine decrescente)
-
-    // PER OGNI MISURA CREO UNA NUOVA COMB
-    for (let i = 0; i < arrayMisure.length; i++) {
-      aggiungiCombConMisura(arrayMisure[i]);
-      tutteLeCombFunz.push(combTemp);
-    }
-
-    
-    //ad ogni giro si passa tutte le combinazioni esistenti e aggiunge una combinazione per ogni misura dell'ordine ad ognuna di esse.
-    if (continua) {
-      //per tot giri fissi
-      for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
-        console.log("ondata "+(ondata+1)+" combs: "+tutteLeCombFunz);
-        setStato(`Sto creando tutte le combinazioni possibili tra le misure dell'ordine: Passaggio ${ondata+1} su ${numTagliMassimi}`)
-        let tempArrDelleCombLength = tutteLeCombFunz.length;
-        // per ogni comb esistente in precedenza
-        for (let i = 0; i < tempArrDelleCombLength; i++) {
-          //let serveTenereLaCombo = false; /*PRIMA O POI*/
-          let combAttuale = tutteLeCombFunz[i];
-          let barraRimasta =
-            lungBarra -
-            sum(combAttuale);
-          if(combAttuale.length>(ondata)) {
-            console.log(combAttuale+" è utile");
-            // per ogni misura dell'ordine 
-          for (let j = 0; j < arrayMisure.length; j++) {
-            let misuraOrdine = arrayMisure[j];
-            if (ciStaAncora(misuraOrdine, combAttuale, barraRimasta)) {
-               {
-                iterazioni++
-                //SEZIONE PER EVITARE CRASH
-                /*
-                if (iterazioni === 1000000) {
-                  if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                    continua = true;
-                   } else {
-                    continua = false;
-                   }
-                } else if (iterazioni === 5000000) {
-                  if (window.confirm("Ora sono cinque milioni di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                      continua = true;
-                    } else {
-                      continua = false;
-                    }
-                  }*/
-                let newComb = combAttuale.slice(0);
-                newComb.push(misuraOrdine);
-                tutteLeCombFunz.push(newComb);
-              }
-            } /*else {
-              //per il momento tolgo il fatto di cancellare la combo se tutte le misure sono state aggiunte perché non voglio togliere comb mentre ci looppo sopra
-              //se almeno una misura non viene aggiunta tengo la combo a cui sto aggiungendo le altre misure perché potrebbe essere il risultato miglliore
-              serveTenereLaCombo = true
-              //devo capire se mi serve tenere le combo peggiori o no. nel caso in cui si debba ricorrere a combo meno ottimali per fare andare altre barre potrebbero servirmi
-            }*/
-            }
-          } else {
-            console.log(combAttuale+" non era utile per l'ondata "+(ondata+1));
-          }
-          // quando poi posso cancellare la combo che non mi serve lo faccio qui
-        }
-        //console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeCombFunz.length);
-      }
-      console.log(tutteLeCombFunz);
-      return tutteLeCombFunz;
-    } else {
-      console.log("HAI SCELTO DI NON CONTINUARE O CMQ CONTINUA E' SU FALSE");
-    }
-    
-  }
 
   function trovaCombMigliore(allCombs) {
     setStato("Sto cercando la combinazione che restituisce meno scarto")
     let bestComb = [allCombs[0]];
     for (let i = 0; i < allCombs.length; i++) {
       let scartoBestComb =
-        lungBarra - sum(bestComb[0]);
+        650 -
+        bestComb[0].reduce(function(a, b) {
+          return a + b;
+        }, 0);
       let scartoThisComb =
-        lungBarra - sum(allCombs[i]);
+        650 -
+        allCombs[i].reduce(function(a, b) {
+          return a + b;
+        }, 0);
 
       if (scartoBestComb > scartoThisComb) {
         //QUESTO SORT NON FUNZIONA????
@@ -741,9 +639,9 @@ function App() {
   //CREA PIANO
 
   function pianoSandbox() {
-    if(ordineImpostato.length>0) {
+    if(ordineSandbox.length>0) {
       //clono l'ordine per lasciare l'originale inserito nell'altra sezione e pterlo consultare o rifare il piano con altre impostazioni
-      let ordineDuplicato = cloneDeep(ordineImpostato);
+      let ordineDuplicato = cloneDeep(ordineSandbox);
       ordineDelleCoseCheAvanzano = [];
       setPiano([]);
       
@@ -780,13 +678,18 @@ function App() {
         setPianiCalcolati(numeroDiVolteCheCalcoloIlPIano);
         //PIANO PER L'ORDINE IMMESSO
 
-        
-        ordine = creaArrayDecrescenteMisure(ordine)
-        
+        // creo un array solo delle misure
+        let arrayMisure = [];
+        ordine.forEach((e, i) => arrayMisure.push(e[1]));
+
+        // ORDINO L'ARRAY DELLE MISURE IN MODO DECRESCENTE
+        arrayMisure.sort(function(a, b) {
+        return b/*[1]*/ - a/*[1]*/; /*non mi ricordo perché ci fosse l'[1]*/
+        });
 
 
         if (opzioni.mode !== "acra") {
-          tutteLeComb = creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi);
+          creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi);
           if (!continua) {
             //VIA DI FUGA SE FAI ANNULLA - QUESTO E' ANCORA DA CONTROLLARE
             setPiano([])
@@ -800,12 +703,12 @@ function App() {
           for (let i = 0; i < arrayMisure.length; i++) {
             let tempComb = [arrayMisure[i]];
             let barraRimasta =
-                lungBarra -
-                sum(tempComb);
+                650 -
+                tempComb.reduce((a, b) => a + b, 0);
               while (ciStaAncora(arrayMisure[i], tempComb, barraRimasta)) {
                 tempComb.push(arrayMisure[i])
               }
-              combMigliore = [tempComb,(lungBarra-sum(tempComb))]
+              combMigliore = [tempComb,(650-tempComb.reduce((a, b) => a + b, 0))]
               quanteBarreConQuestaComb(combMigliore, ordine, inizialeOAvanzi)
           }
         }        
@@ -885,10 +788,6 @@ function App() {
     setOutput(quanteBarreConQuestaComb(input,input2,"iniziale"))
   }
 
-  function provaCreaArrayDecrescenteMisure() {
-    setOutput(creaArrayDecrescenteMisure(input));
-  }
-
   //RENDERING DELLA PAGINA
 
   return (
@@ -943,13 +842,6 @@ function App() {
             name="textToArr"
             onClick={fanneUnArray}
             value="fanne un array"
-            />
-            <input
-            className="input-reset ba b--black-20 pa2 ml2 db"
-            type="button"
-            name="ordineToInput"
-            onClick={ordineToInput}
-            value="ordine->input"
             />
             </div>
             </div>
@@ -1056,7 +948,7 @@ function App() {
           </form>
           <br />
           <div className="pa2 br4">
-            <Ordine ordine={ordineImpostato} />
+            <Ordine ordine={ordineSandbox} />
           </div>
         </div>
       </div>
@@ -1157,19 +1049,6 @@ function App() {
             <small id="name-desc" class="f6 db mb2">
               Larghezza lama (imposta 0.5 per alluminio, 0.2 per acciaio)
             </small>
-            <strong>LUNG. BARRE</strong>
-            <br />
-            <br />
-            <input
-              className="input-reset ba b--black-20 pa2 mb2 db w-100"
-              name="lungBarra"
-              type="number"
-              value={lungBarra}
-              onChange={impostaLungBarra}
-            />
-            <small id="name-desc" class="f6 db mb2">
-              Lunghezza barre di partenza
-            </small>
           </label>
           <label className="w-third pa2">
             <strong>SAMPLES</strong>
@@ -1248,21 +1127,6 @@ function App() {
               />
               <small id="name-desc" class="f6 db mb2">
               Input: comb, ordine, inizialeOAvanzi
-              </small>
-            </label>
-            <label className="w-third pa2">
-              <strong>CREA ARRAY MISURE DECRESCENTI</strong>
-              <br />
-              <br />
-              <input
-              className="input-reset ba b--black-20 pa2 mb2 db w-100"
-              type="button"
-              name="provaCreaArrayDecrescenteMisure"
-              onClick={provaCreaArrayDecrescenteMisure}
-              value="prova"
-              />
-              <small id="name-desc" class="f6 db mb2">
-              Input: ordine
               </small>
             </label>
             </>
