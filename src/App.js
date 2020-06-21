@@ -223,12 +223,12 @@ function App() {
         [156, 109.2],
         [273, 89.2]
       ]);
-      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 1 - versione 0.3 - 18.929 iterazioni</strong><p></p><p><Pianoditaglio 
+      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 1 - versione 0.3 - 18.929 iterazioni</strong><br /><br /><div><Pianoditaglio 
         piano={[["Barre utilizzate: ",317,"Scarto totale: ",3413.6000000000013,"Meno scarto possibile"],[91,"barre tagliate così: ",[199.2,199.2,139.2,109.2]," con scarto: ",3.2000000000000455],[152,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[60,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[2,"barre tagliate così: ",[119.2,119.2,119.2,109.2,109.2]," con scarto: ",74],[12,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",89.2],["-",1,"x",109.2],["-",3,"x",119.2]]]}
         profilo="AL/1"
         mode="menoScarto"
          />
-        </p>
+        </div>
         </div>
         )
     } else if (newValue === "sample2") {
@@ -240,12 +240,12 @@ function App() {
         [32, 62.2],
         [37, 48.7]
       ]);
-      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 2 - versione 0.3 - 8.940.344 iterazioni</strong><p></p><p><Pianoditaglio 
+      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 2 - versione 0.3 - 8.940.344 iterazioni</strong><br /><br /><div><Pianoditaglio 
         piano={[["Barre utilizzate: ",35,"Scarto totale: ",118.59999999999741,"Meno scarto possibile"],[16,"barre tagliate così: ",[196.7,135.8,135.8,62.2,48.7,68.2]," con scarto: ",2.599999999999909],[10,"barre tagliate così: ",[196.7,196.7,68.2,68.2,48.7,68.2]," con scarto: ",3.2999999999999545],[8,"barre tagliate così: ",[81.2,81.2,196.7,81.2,62.2,62.2,81.2]," con scarto: ",4.099999999999909],[1,"barre tagliate così: ",[196.7,196.7,48.7,196.7]," con scarto: ",11.200000000000045],[0,"barre tagliate così: ",[81.2,81.2,81.2,81.2,81.2,48.7,48.7,48.7,81.2]," con scarto: ",16.699999999999932],[0,"barre tagliate così: ",[48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7]," con scarto: ",114.30000000000007],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",68.2],["-",2,"x",196.7],["-",1,"x",81.2],["-",1,"x",48.7]]]}
         profilo="AL/1"
         mode="menoScarto"
          />
-        </p>
+        </div>
         </div>
         )
     } else if (newValue === "sample3") {
@@ -258,12 +258,12 @@ function App() {
         [159, 50],
         [200, 35.1]
       ]);
-      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE STRESS TEST - versione 0.3 - 35.697.301 iterazioni</strong><p></p><p><Pianoditaglio 
+      setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE STRESS TEST - versione 0.3 - 35.697.301 iterazioni</strong><br /><br /><div><Pianoditaglio 
         piano={[["Barre utilizzate: ",337,"Scarto totale: ",1782.8000000000018,"Meno scarto possibile"],[60,"barre tagliate così: ",[199.2,199.2,50,199.2]," con scarto: ",2.400000000000091],[99,"barre tagliate così: ",[139.2,139.2,139.2,50,35.1,35.1,109.2]," con scarto: ",3],[1,"barre tagliate così: ",[119.2,119.2,139.2,35.1,109.2,35.1,89.2]," con scarto: ",3.799999999999841],[100,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[56,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[20,"barre tagliate così: ",[119.2,119.2,119.2,89.2,89.2,89.2]," con scarto: ",24.799999999999955],[1,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",199.2],["-",3,"x",139.2],["-",3,"x",119.2]]]}
         profilo="AL/1"
         mode="menoScarto"
          />
-        </p>
+        </div>
         </div>
         )
     } else if (newValue === "sample4") {
@@ -292,6 +292,7 @@ function App() {
   }
 
   function fanneUnArray() {
+    //NON FUNZIONA BENE
     setInput(Array.from(input))
   }
 
@@ -398,8 +399,6 @@ function App() {
   
 
   // FUNZ FUORI DA FUNZ
-
-
   
 
   function ciStaAncora(misura, comb, barraRimanente = lungBarra) {
@@ -436,65 +435,6 @@ function App() {
       return b/*[1]*/ - a/*[1]*/; /*non mi ricordo perché ci fosse l'[1]*/
       });
     return arrayMisure;
-  }
-
-  function creaTutteLeCombPossibiliBackup(arrayMisure, inizialeOAvanzi) {
-    if (inizialeOAvanzi === "iniziale") {
-      let misPiccola = arrayMisure[arrayMisure.length - 1];
-      let numTagliMassimi = Math.round(650 / (misPiccola + 0.5));
-      //il numero dei loop che eseguo sotto è determinato dal numero massimo di tagli che posso fare in una singola barra, e cioé barra/misura più piccola dell'ordine
-
-      // PER OGNI MISURA CREO UNA NUOVA COMB
-      for (let i = 0; i < arrayMisure.length; i++) {
-        aggiungiCombConMisura(arrayMisure[i]);
-        tutteLeComb.push(combTemp);
-      }
-      
-      //ad ogni giro si passa tutte le combiniazioni esistenti e aggiunge una combinazione per ogni misura dell'ordinead ognuna di esse.
-      if (continua) {
-        //pre tot giri fissi
-        for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
-        setStato(`Sto creando tutte le combinazioni possibili tra le misure dell'ordine: Passaggio ${ondata+1} su ${numTagliMassimi}`)
-        let tempArrCombLength = tutteLeComb.length;
-        // per ogni comb esistente in precedenza
-          for (let i = 0; i < tempArrCombLength; i++) {
-            let combAttuale = tutteLeComb[i];
-            let barraRimasta =
-              650 -
-              combAttuale.reduce((a, b) => a + b, 0);
-            // per ogni misura dell'ordine  
-            for (let j = 0; j < arrayMisure.length; j++) {
-              let misuraOrdine = arrayMisure[j];
-
-              if (ciStaAncora(misuraOrdine, combAttuale, barraRimasta)) {
-                
-                if(combAttuale.length>(ondata)) {
-                  iterazioni++
-                    if (iterazioni === 1000000) {
-                      if (window.confirm("Hai già raggiunto un milione di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                        continua = true;
-                      } else {
-                        continua = false;
-                      }
-                    } else if (iterazioni === 5000000) {
-                      if (window.confirm("Ora sono cinque milioni di iterazioni. Probabilmente l'ordine è molto complesso o contiene almeno una misura molto piccola. Se pensi che il dispositivo su cui stai eseguendo il calcolo sia abbastanza potente, premi OK per continuare")) {
-                        continua = true;
-                      } else {
-                        continua = false;
-                      }
-                    }
-                  let newComb = combAttuale.slice(0);
-                  newComb.push(misuraOrdine);
-                  tutteLeComb.push(newComb);
-                  }
-              }
-            }
-          }
-          console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeComb.length);
-        }
-      }
-    }
-    return tutteLeComb
   }
   
   function creaTutteLeCombPossibili(arrayMisure) {
@@ -594,42 +534,6 @@ function App() {
     return bestComb;
   }
 
-  function simulazioneTaglioCombBackup(comb, ordinePerQuanteBarre) {
-    let numBarreConQuestaCombSim = 0;
-    //clono le var per vedere quante barre mi servono. c'è di sicuro un modo meno stupido di vedere quante barre mi servono
-    combFittizia = cloneDeep(comb[0])/*comb[0].slice(0)*/;
-    ordineFittizio = cloneDeep(ordinePerQuanteBarre)/*[];
-    for (let i = 0; i < ordine.length; i++) {
-      ordineFittizio[i] = ordine[i].slice();
-    }*/
-    let hoFinitoDiTagliareUnaMisuraFittizia = false;        
-    //qui faccio prima un loop fittizio in cui decido quante barre servirebbero prima di esaurire una delle misure coinvolte, poi se l'ultima barra non è sfruttata completamente decido di tagliarne una di meno e aggiungere le stecche che mancavano al completamento ad un array da gestire poi in altro modo
-    while (!hoFinitoDiTagliareUnaMisuraFittizia) {
-      // per ogni misura della combo (taglio sulla barra)
-      for (let i = 0; i < combFittizia.length; i++) {
-        let misuraDellaComb = combFittizia[i];
-        // per ogni telo dell'ordine
-        for (let j = 0; j < ordineFittizio.length; j++) {
-          let misuraDellOrdine = ordineFittizio[j][1];
-          let quanteBarreServonoPerQuesta = ordineFittizio[j][0];
-          if (misuraDellaComb === misuraDellOrdine) {
-            quanteBarreServonoPerQuesta--;
-            if (quanteBarreServonoPerQuesta === 0) {
-              console.log(
-                "Ho finito di tagliare la misura fittizia "+
-                misuraDellOrdine
-              );
-              hoFinitoDiTagliareUnaMisuraFittizia = true;
-              misuraDaTogliereDallOrdine = misuraDellOrdine;
-            }
-          }
-        }
-      }
-      numBarreConQuestaCombSim++;
-    }
-    return numBarreConQuestaCombSim
-  }
-
   function neHoTagliateTroppe(ordineConTaglioSimulato) {
     console.log("neHotagliatetroppe start: "+ordineConTaglioSimulato)
     for (let i = 0; i < ordineConTaglioSimulato.length; i++) {
@@ -676,18 +580,9 @@ function App() {
     if (neHoTagliateTroppe(ordineFittizio)) {
       numBarreConQuestaCombSim--
     }
-
+    
 
     return numBarreConQuestaCombSim
-  }
-
-  function quanteBarre2(comb, ordine) {
-    let numBarreConQuestaComb = 0;
-
-
-
-
-
   }
 
   function eliminaTutteCombContenentiMisura(misura) {
@@ -698,6 +593,16 @@ function App() {
       }      
     }
     console.log("n. combo dopo averlo fatto: "+tutteLeComb.length)
+  }
+
+  function aggiungiBarreDaTagliareAncora(combUtilizzata, ordineFittizio) {
+    //questa non dovrebbe servire più
+    for (let i = 0; i < ordineFittizio.length; i++) {
+      if (ordineFittizio[i][0] < 0) {
+
+      }
+      
+    }
   }
 
   function quanteBarreConQuestaComb(comb, ordinePerQuanteBarre) {
@@ -749,11 +654,7 @@ function App() {
         if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
           ordinePerQuanteBarre.splice(i, 1);
         }
-    }            
-
-    //TOLGO LA COMB DA TUTTE LE COMB
-    tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1)
-    
+    }    
 
     //CREO UNA RIGA NEL PIANO DI TAGLIO CON QUANTE BARRE DEVO TAGLIARE CON QUESTA COMBO, LE MISURE DELLA COMBO E LO SCARTO
     pianoDiTaglioCompleto.push([
@@ -763,6 +664,11 @@ function App() {
       " con scarto: ",
       comb[1]
     ]);
+
+
+    //TOLGO LA COMB DA TUTTE LE COMB
+    tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1)
+
 
     return numBarreConQuestaComb;
   }
@@ -920,8 +826,9 @@ function App() {
                 <select
                   name="inputPredefinito"
                   className="input-reset ba b--black-20 pa2 db"
+                  defaultValue="none"
                 > 
-                  <option value="none" selected="selected">
+                  <option value="none">
                     input predefiniti
                   </option>
                   <option value="inputTrovaTutteCombo">
@@ -978,8 +885,9 @@ function App() {
               <select
                 name="inputPredefinito"
                 className="input-reset ba b--black-20 pa2 db"
+                defaultValue="none"
               > 
-                <option value="none" selected="selected">
+                <option value="none">
                   input predefiniti
                 </option>
                 <option value="inputTrovaTutteCombo">
@@ -1095,15 +1003,16 @@ function App() {
               <select
                 name="mode"
                 className="input-reset ba b--black-20 pa2 mb2 db w-100"
+                defaultValue="menoScarto"
               >
-                <option value="menoScarto" selected="selected">
+                <option value="menoScarto">
                   Scarto minore
                 </option>
                 <option value="menoBarre">Meno barre</option>
                 <option value="acra">Acra</option>
               </select>
             </fieldset>
-            <small id="name-desc" class="f6 db mb2">
+            <small id="name-desc" className="f6 db mb2">
               {descMode}
             </small>
           </label>
@@ -1119,8 +1028,9 @@ function App() {
               <select
                 name="profilo"
                 className="input-reset ba b--black-20 pa2 mb2 db w-100"
+                defaultValue="AL/1"
               >
-                <option value="AL/1" selected="selected">
+                <option value="AL/1">
                   AL/1
                 </option>
                 <option value="AC/6">AC/6</option>
@@ -1128,7 +1038,7 @@ function App() {
                 <option value="AL/2">AL/2</option>
               </select>
             </fieldset>
-            <small id="name-desc" class="f6 db mb2">
+            <small id="name-desc" className="f6 db mb2">
               Info usata per calcolare il numero dei pacchi necessari.
             </small>
           </label>
@@ -1144,7 +1054,7 @@ function App() {
               value={opzioni.maxScarto}
               onChange={impostaOpzioni}
             />
-            <small id="name-desc" class="f6 db mb2">
+            <small id="name-desc" className="f6 db mb2">
               Lunghezza massimo scarto
             </small>
           </label>
@@ -1159,7 +1069,7 @@ function App() {
               value={opzioni.minSfrido}
               onChange={impostaOpzioni}
             />
-            <small id="name-desc" class="f6 db mb2">
+            <small id="name-desc" className="f6 db mb2">
               Lunghezza minima sfrido
             </small>
           </label>
@@ -1174,7 +1084,7 @@ function App() {
               value={opzioni.larghezzaLama}
               onChange={impostaOpzioni}
             />
-            <small id="name-desc" class="f6 db mb2">
+            <small id="name-desc" className="f6 db mb2">
               Larghezza lama (imposta 0.5 per alluminio, 0.2 per acciaio)
             </small>
           </label>
@@ -1189,7 +1099,7 @@ function App() {
               value={lungBarra}
               onChange={impostaLungBarra}
             />
-            <small id="name-desc" class="f6 db mb2">
+            <small id="name-desc" className="f6 db mb2">
               Lunghezza barre di partenza
             </small>
           </label>
@@ -1220,8 +1130,9 @@ function App() {
               <select
                 name="debug"
                 className="input-reset ba b--black-20 pa2 mb2 db w-100"
+                defaultValue="none"
               > 
-                <option value="none" selected="selected"></option>
+                <option value="none">scegli</option>
                 <option value="sample1">
                   Sample 1
                 </option>
@@ -1230,7 +1141,7 @@ function App() {
                 <option value="sample4">Sample 4</option>
               </select>
             </fieldset>
-            <small id="name-desc" class="f6 db mb2">
+            <small id="name-desc" className="f6 db mb2">
             Aggiunge un ordine di esempio.
             </small>
             </label>
@@ -1269,7 +1180,7 @@ function App() {
               onClick={provaSimQuanteBarre}
               value="prova"
               />
-              <small id="name-desc" class="f6 db mb2">
+              <small id="name-desc" className="f6 db mb2">
               Input: comb, ordineIntero
               </small>
             </label>
@@ -1284,7 +1195,7 @@ function App() {
               onClick={provaQuanteBarre}
               value="prova"
               />
-              <small id="name-desc" class="f6 db mb2">
+              <small id="name-desc" className="f6 db mb2">
               Input: comb, ordineIntero
               </small>
             </label>
@@ -1299,7 +1210,7 @@ function App() {
               onClick={provaCreaArrayDecrescenteMisure}
               value="prova"
               />
-              <small id="name-desc" class="f6 db mb2">
+              <small id="name-desc" className="f6 db mb2">
               Input: ordine
               </small>
             </label>
