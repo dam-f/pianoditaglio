@@ -19,10 +19,8 @@ function Pianoditaglio(props) {
   let idComb = 0;
 
   function creaComponenteMisura(comb) {
-    if (comb[0] !== 0) {
       idComb++;
       return <MisuraPiano combPiano={comb} key={"idComb"+idComb}/>;
-    }
   }
 
   let profilo = props.profilo;
@@ -55,8 +53,8 @@ function Pianoditaglio(props) {
     //console.log(pianoPerRender);
 
     pianoPerRender.shift();
-    pianoPerRender.pop();
-    pianoPerRender.pop();
+    //pianoPerRender.pop();
+    //pianoPerRender.pop();
 
     //FARE UNA FUNZIONE che si passa le stecche avanzate da tagliare e riunisce le misure guali con un 3x davanti (se ad es. la misura è ripetuta 3 volte). for loop con se le due misure sono uguali una viene splice-ata e l'altra si aggiunge un numx dove il nume parte da 1(x tutte le misure, in automatico, e poi aggiunge a num++)
 

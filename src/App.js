@@ -26,7 +26,7 @@ function App() {
   const [profilo, setProfilo] = useState("AL/1");
 
   const [opzioni, setOpzioni] = useState({
-    maxScarto: 25,
+    maxScarto: 30,
     minSfrido: 65,
     larghezzaLama: 0.5,
     mode: "menoScarto"
@@ -224,7 +224,7 @@ function App() {
         [273, 89.2]
       ]);
       setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 1 - versione 0.3 - 18.929 iterazioni</strong><br /><br /><div><Pianoditaglio 
-        piano={[["Barre utilizzate: ",317,"Scarto totale: ",3413.6000000000013,"Meno scarto possibile"],[91,"barre tagliate così: ",[199.2,199.2,139.2,109.2]," con scarto: ",3.2000000000000455],[152,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[60,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[2,"barre tagliate così: ",[119.2,119.2,119.2,109.2,109.2]," con scarto: ",74],[12,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",89.2],["-",1,"x",109.2],["-",3,"x",119.2]]]}
+        piano={[["Barre utilizzate: ",317,"Scarto totale: ",3413.6000000000013,"Meno scarto possibile"],[91,"barre tagliate così: ",[199.2,199.2,139.2,109.2]," con scarto: ",3.2000000000000455],[152,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[60,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[2,"barre tagliate così: ",[119.2,119.2,119.2,109.2,109.2]," con scarto: ",74],[12,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2]]}
         profilo="AL/1"
         mode="menoScarto"
          />
@@ -241,7 +241,7 @@ function App() {
         [37, 48.7]
       ]);
       setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE SAMPLE 2 - versione 0.3 - 8.940.344 iterazioni</strong><br /><br /><div><Pianoditaglio 
-        piano={[["Barre utilizzate: ",35,"Scarto totale: ",118.59999999999741,"Meno scarto possibile"],[16,"barre tagliate così: ",[196.7,135.8,135.8,62.2,48.7,68.2]," con scarto: ",2.599999999999909],[10,"barre tagliate così: ",[196.7,196.7,68.2,68.2,48.7,68.2]," con scarto: ",3.2999999999999545],[8,"barre tagliate così: ",[81.2,81.2,196.7,81.2,62.2,62.2,81.2]," con scarto: ",4.099999999999909],[1,"barre tagliate così: ",[196.7,196.7,48.7,196.7]," con scarto: ",11.200000000000045],[0,"barre tagliate così: ",[81.2,81.2,81.2,81.2,81.2,48.7,48.7,48.7,81.2]," con scarto: ",16.699999999999932],[0,"barre tagliate così: ",[48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7]," con scarto: ",114.30000000000007],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",68.2],["-",2,"x",196.7],["-",1,"x",81.2],["-",1,"x",48.7]]]}
+        piano={[["Barre utilizzate: ",35,"Scarto totale: ",118.59999999999741,"Meno scarto possibile"],[16,"barre tagliate così: ",[196.7,135.8,135.8,62.2,48.7,68.2]," con scarto: ",2.599999999999909],[10,"barre tagliate così: ",[196.7,196.7,68.2,68.2,48.7,68.2]," con scarto: ",3.2999999999999545],[8,"barre tagliate così: ",[81.2,81.2,196.7,81.2,62.2,62.2,81.2]," con scarto: ",4.099999999999909],[1,"barre tagliate così: ",[196.7,196.7,48.7,196.7]," con scarto: ",11.200000000000045],[0,"barre tagliate così: ",[81.2,81.2,81.2,81.2,81.2,48.7,48.7,48.7,81.2]," con scarto: ",16.699999999999932],[0,"barre tagliate così: ",[48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7,48.7]," con scarto: ",114.30000000000007]]}
         profilo="AL/1"
         mode="menoScarto"
          />
@@ -259,7 +259,7 @@ function App() {
         [200, 35.1]
       ]);
       setPianoRef(<div className="h1 green"><strong className="tc black">REFERENCE STRESS TEST - versione 0.3 - 35.697.301 iterazioni</strong><br /><br /><div><Pianoditaglio 
-        piano={[["Barre utilizzate: ",337,"Scarto totale: ",1782.8000000000018,"Meno scarto possibile"],[60,"barre tagliate così: ",[199.2,199.2,50,199.2]," con scarto: ",2.400000000000091],[99,"barre tagliate così: ",[139.2,139.2,139.2,50,35.1,35.1,109.2]," con scarto: ",3],[1,"barre tagliate così: ",[119.2,119.2,139.2,35.1,109.2,35.1,89.2]," con scarto: ",3.799999999999841],[100,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[56,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[20,"barre tagliate così: ",[119.2,119.2,119.2,89.2,89.2,89.2]," con scarto: ",24.799999999999955],[1,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2],"(SOLUZ. TEMPORANEA) Infine taglia queste stecche dagli sfridi o da una nuova barra (se sono molte puoi calcolare un nuovo piano di taglio) :",[["-",1,"x",199.2],["-",3,"x",139.2],["-",3,"x",119.2]]]}
+        piano={[["Barre utilizzate: ",337,"Scarto totale: ",1782.8000000000018,"Meno scarto possibile"],[60,"barre tagliate così: ",[199.2,199.2,50,199.2]," con scarto: ",2.400000000000091],[99,"barre tagliate così: ",[139.2,139.2,139.2,50,35.1,35.1,109.2]," con scarto: ",3],[1,"barre tagliate così: ",[119.2,119.2,139.2,35.1,109.2,35.1,89.2]," con scarto: ",3.799999999999841],[100,"barre tagliate così: ",[139.2,139.2,139.2,139.2,89.2]," con scarto: ",4],[56,"barre tagliate così: ",[119.2,119.2,119.2,109.2,89.2,89.2]," con scarto: ",4.7999999999999545],[20,"barre tagliate così: ",[119.2,119.2,119.2,89.2,89.2,89.2]," con scarto: ",24.799999999999955],[1,"barre tagliate così: ",[119.2,119.2,119.2,119.2]," con scarto: ",173.2]]}
         profilo="AL/1"
         mode="menoScarto"
          />
@@ -438,6 +438,7 @@ function App() {
   }
   
   function creaTutteLeCombPossibili(arrayMisure) {
+    setStato("Creo tutte le combinazioni possibili delle misure dell'ordine")
     let tutteLeCombFunz = []
     //RICHIEDE: arrayMisure in ordine decrescente
     //l'if inizialeOAvanzi iniziava qui
@@ -587,11 +588,14 @@ function App() {
 
   function eliminaTutteCombContenentiMisura(misura) {
     console.log("elimino tutte le combo con la misura "+misura+". n. combo prima di farlo: "+tutteLeComb.length)
+    let newTutteLeComb = [];
     for (let i = 0; i < tutteLeComb.length; i++) {
-      if (tutteLeComb[i].includes(misura)) {
-        tutteLeComb.splice(i,1)
+      if (!(tutteLeComb[i].includes(misura))) {
+        //console.log("questa la posso tenere: "+tutteLeComb[i]);
+        newTutteLeComb.push(tutteLeComb[i]);
       }      
     }
+    tutteLeComb = newTutteLeComb;
     console.log("n. combo dopo averlo fatto: "+tutteLeComb.length)
   }
 
@@ -606,64 +610,106 @@ function App() {
   }
 
   function quanteBarreConQuestaComb(comb, ordinePerQuanteBarre) {
+
+    console.log("FACCIO PARTIRE QUANTEBARRE. ORDINE PRIMA: "+ordinePerQuanteBarre)
+
     let numBarreConQuestaComb = 0;
     let hoFinitoDiTagliareUnaMisura = false;
+    // questo arr sotto sarà riempito di arr contententi [misuradatogliere, indice misura da togliere in ordine]
+    let misureFiniteDiTagliare = [];
     misuraDaTogliereDallOrdine = "";
-
+    console.log("SIMULO QUANTE BARRE TAGLIARE")
     numBarreConQuestaComb = simulazioneTaglioComb(comb, ordinePerQuanteBarre);
-    /*
-    while (!hoFinitoDiTagliareUnaMisura) {
-      for (let i = 0; i < comb[0].length; i++) {
-        for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
-          if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
-            ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
-            if (ordinePerQuanteBarre[j][0] === 0) {
-              console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
-              hoFinitoDiTagliareUnaMisura = true;
-              //COSA MOLTO PERICOLOSA:
-              ordinePerQuanteBarre.splice(j, 1);
+    if (numBarreConQuestaComb === 0) {
+      console.log("HO DECISO DI NON TAGLIARNE.");
+    } else {
+      console.log("HO DECISO DI TAGLIARNE "+numBarreConQuestaComb);
+      /*
+      while (!hoFinitoDiTagliareUnaMisura) {
+        for (let i = 0; i < comb[0].length; i++) {
+          for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+            if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+              ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+              if (ordinePerQuanteBarre[j][0] === 0) {
+                console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
+                hoFinitoDiTagliareUnaMisura = true;
+                //COSA MOLTO PERICOLOSA:
+                ordinePerQuanteBarre.splice(j, 1);
+              }
             }
           }
         }
       }
-    }
-    */
-   
-    for (let i = 0; i < numBarreConQuestaComb; i++) {
-      for (let i = 0; i < comb[0].length; i++) {
-        for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
-          if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
-            ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
-            if (ordinePerQuanteBarre[j][0] === 0) {
-              console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
-              hoFinitoDiTagliareUnaMisura = true;
-              //COSA ALTRETTANTO PERICOLOSA - elimino tutte le combo contenenti la misura
-              eliminaTutteCombContenentiMisura(ordinePerQuanteBarre[j][1]);
-              //COSA MOLTO PERICOLOSA:
-              ordinePerQuanteBarre.splice(j, 1);
-              
+      */
+    
+      for (let i = 0; i < numBarreConQuestaComb; i++) {
+        for (let i = 0; i < comb[0].length; i++) {
+          for (let j = 0; j < ordinePerQuanteBarre.length; j++) {
+            if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
+              ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
+              if (ordinePerQuanteBarre[j][0] === 0) {
+                console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
+                hoFinitoDiTagliareUnaMisura = true;
+                misureFiniteDiTagliare.push([ordinePerQuanteBarre[j][1], j]);
+              }
             }
           }
         }
       }
 
-    }
+      //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
 
-    //tolgo la misura di cui ho tutte le stecche tagliate dall'ordine, così da poter ricreare un nuovo insieme di combinazioni che non tenga più conto di quella misura
-    for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
-        if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
-          ordinePerQuanteBarre.splice(i, 1);
+      while (misureFiniteDiTagliare.length>0) {
+        //le misure erano in un array con anche l'indice a cui erano, ma se ne elimino due insieme l'indice non è più valido e dà problemi, quindi riformulo senza usare l'indice.
+        eliminaTutteCombContenentiMisura(misureFiniteDiTagliare[0][0]);
+        for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
+          if (misureFiniteDiTagliare[0][0] === ordinePerQuanteBarre[i][1]) {
+            ordinePerQuanteBarre.splice(i,1)
+          }
         }
-    }    
+        misureFiniteDiTagliare.shift();
+      }
 
-    //CREO UNA RIGA NEL PIANO DI TAGLIO CON QUANTE BARRE DEVO TAGLIARE CON QUESTA COMBO, LE MISURE DELLA COMBO E LO SCARTO
-    pianoDiTaglioCompleto.push([
-      numBarreConQuestaComb,
-      "barre tagliate così: ",
-      comb[0],
-      " con scarto: ",
-      comb[1]
-    ]);
+      /*
+      while (misureFiniteDiTagliare.length>0) {
+        eliminaTutteCombContenentiMisura(misureFiniteDiTagliare[0][0]);
+        //console.log("cancello la misura dall'ordine: "+misureFiniteDiTagliare[0][0]);
+        //console.log("la misura nell'ordine che sto andando a cercare è "+ordinePerQuanteBarre[misureFiniteDiTagliare[0][1]])
+        ordinePerQuanteBarre.splice(misureFiniteDiTagliare[0][1], 1);
+        misureFiniteDiTagliare.shift();
+        //console.log("MISURE FINITE DI TAGLIARE DOPO AVER TOLTO: "+misureFiniteDiTagliare)
+      }
+      */
+      /*
+      if (hoFinitoDiTagliareUnaMisura) {
+        //COSA ALTRETTANTO PERICOLOSA - elimino tutte le combo contenenti la misura
+        eliminaTutteCombContenentiMisura(misuraFinitaDiTagliare);
+        //COSA MOLTO PERICOLOSA:
+        ordinePerQuanteBarre.splice(indexMisuraFinitaDiTagliare, 1);
+      }
+      */
+      /*
+      for (let i = 0; i < ordinePerQuanteBarre.length; i++) {
+          if (ordinePerQuanteBarre[i][1] === misuraDaTogliereDallOrdine) {
+            ordinePerQuanteBarre.splice(i, 1);
+          }
+      }
+      */
+
+      //CREO UNA RIGA NEL PIANO DI TAGLIO CON QUANTE BARRE DEVO TAGLIARE CON QUESTA COMBO, LE MISURE DELLA COMBO E LO SCARTO
+
+      console.log("AGGIUNGO LA COMBO AL PIANO: "+numBarreConQuestaComb+
+      "barre tagliate così: "+comb[0]+" con scarto: "+comb[1]);
+      pianoDiTaglioCompleto.push([
+        numBarreConQuestaComb,
+        "barre tagliate così: ",
+        comb[0],
+        " con scarto: ",
+        comb[1]
+      ]);
+      console.log("PIANO DI TAGLIO COMPLETO: "+pianoDiTaglioCompleto)
+    }
+    
 
 
     //TOLGO LA COMB DA TUTTE LE COMB
@@ -676,17 +722,22 @@ function App() {
   function pianoDiTaglio(ordine) {
     numeroDiVolteCheCalcoloIlPIano++;
     setPianiCalcolati(numeroDiVolteCheCalcoloIlPIano);
-    
+    console.log("ESEGUO IL PIANO DI TAGLIO SU "+ordine+". ITERAZIONE N. "+numeroDiVolteCheCalcoloIlPIano)
     if (opzioni.mode !== "acra") {
       //QUESTO LO SPOSTO ALL'INIZIO DELL'ONCLICK
       //tutteLeComb = creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi);
       if (!continua) {
         //VIA DI FUGA SE FAI ANNULLA - QUESTO E' ANCORA DA CONTROLLARE
+        console.log("USCITI");
         setPiano([])
         return false;
       }
+      console.log("CERCO LA COMB MIGLIORE");
       combMigliore = trovaCombMigliore(tutteLeComb);
+      console.log("COMB MIGLIORE: "+combMigliore);
+      console.log("CERCO QUANTE BARRE CON QUESTA COMB");
       quanteBarreConQuestaComb(combMigliore, ordine);
+      console.log("QUANTEBARRE ESEGUITO. ORDINE ADESSO: "+ordine);
 
     } else {
       //ACRA MODE - non combina misure diverse assieme
@@ -731,7 +782,8 @@ function App() {
       let ordineDuplicato = cloneDeep(ordineImpostato);
       //ordineDelleCoseCheAvanzano = [];
       setPiano([]);
-      
+      setStato("Resetto le variabili")
+      console.log("RESETTO VARIABILI")
       // VARIABILI NON MONITORATE
 
       iterazioni = 0;
@@ -751,9 +803,13 @@ function App() {
       modalita = "Calcolo barre per acra"
       }
 
+      setStato("Clono l'ordine")
+      console.log("CREO ARRAY MISURE");
       arrayMisure = creaArrayDecrescenteMisure(ordineDuplicato);
+      console.log("ARRAY MISURE: "+arrayMisure);
+      console.log("CREO TUTTE LE COMBO");
       tutteLeComb = creaTutteLeCombPossibili(arrayMisure);
-
+      console.log("NUMERO COMBO CREATE: "+tutteLeComb.length);
       //ESEGUO IL PIANO IN LOOP
       if(pianoDiTaglio(ordineDuplicato) === false) {
         // (PIANO DI FUGA SE FACCIO ANNULLA)
@@ -761,9 +817,10 @@ function App() {
         return;
       }
 
+
       setStato("Aggiungo le statistiche")
       pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
-
+      console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
       setPiano(pianoDiTaglioCompleto);
       setStato("")
       console.log("iterazioni: ",iterazioni)
@@ -804,7 +861,6 @@ function App() {
       <div className="min-vh-100-l bg-gray pt2 fl w-100-ns w-100-m w-40-l">
         {/*ORDINE*/}
         <h1 className="pl2 pa1 bg-gold w-100">ORDINE</h1>
-        
         <div className="pa3">
           {debugVisual && 
           <div>
@@ -926,7 +982,7 @@ function App() {
               <br />
             </div>
           </div>
-        }
+          }
           <form
             className="bg- br3 flex items-end pa2
             "
@@ -1133,9 +1189,7 @@ function App() {
                 defaultValue="none"
               > 
                 <option value="none">scegli</option>
-                <option value="sample1">
-                  Sample 1
-                </option>
+                <option value="sample1">Sample 1</option>
                 <option value="sample2">Sample 2</option>
                 <option value="sample3">Stress test</option>
                 <option value="sample4">Sample 4</option>
