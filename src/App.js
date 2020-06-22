@@ -722,14 +722,14 @@ function App() {
   function rimasugliDaTagliare(ordineNonClonato, piano) {
     let ordineDuplicato = cloneDeep(ordineNonClonato);
     for (let i = 0; i < ordineDuplicato.length; i++) {
-      let misuraDellOrdine = ordineDuplicato[i][1];
-      let quanteBarreServonoPerQuesta = ordineDuplicato[i][0];
+      //let misuraDellOrdine = ordineDuplicato[i][1];
+      //let quanteBarreServonoPerQuesta = ordineDuplicato[i][0];
         for (let j = 0; j < piano.length; j++) {
-          let quanteNeTaglio = piano[j][0];
+          //let quanteNeTaglio = piano[j][0];
           let arrDeiTagliDellaCombo = piano[j][2];
           for (let k = 0; k < arrDeiTagliDellaCombo.length; k++) {
-            if (misuraDellOrdine === arrDeiTagliDellaCombo[k]) {
-              console.log(`TOLGO ${quanteNeTaglio} A ${misuraDellOrdine}, QUINDI DA `+quanteBarreServonoPerQuesta);
+            if (ordineDuplicato[i][1] === arrDeiTagliDellaCombo[k]) {
+              console.log(`TOLGO ${piano[j][0]} A ${ordineDuplicato[i][1]}, QUINDI DA `+ordineDuplicato[i][0]);
               ordineDuplicato[i][0] = ordineDuplicato[i][0]-piano[j][0];
               console.log("DOVREBBE PASSARE A: "+ordineDuplicato[i][0]);
             }
@@ -737,7 +737,8 @@ function App() {
         }
     }
     console.log("ORDINE DEI RIMASUGLI: "+ordineDuplicato)
-    return ordineDuplicato;
+    let ordineDeiRimasugli = ordineDuplicato.filter(misura => misura[0]>0);
+    return ordineDeiRimasugli;
   }
 
   function pianoDiTaglio(ordine) {
@@ -765,6 +766,7 @@ function App() {
         pianoDiTaglio(ordine);
       }
 
+      /*
       //ANCHE QUESTO E? STATO SPOSTATO QUI
       setStato("Aggiungo le statistiche")
       pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
@@ -772,7 +774,8 @@ function App() {
       setPiano(pianoDiTaglioCompleto);
       setStato("")
       console.log("iterazioni: ",iterazioni)
-
+      //MEGLIO DI NO
+      */
 
     } else {
       //ACRA MODE
@@ -801,14 +804,6 @@ function App() {
           combMigliore = [tempComb,(lungBarra-sum(tempComb))]
           quanteBarreConQuestaComb(combMigliore, ordine)
       }
-
-      //POI CONTROLLA QUANTE BARRE MANCANO.
-      setStato("HO AGGIUNTO LE BARRE DA TAGLIARE A PARTE IN UN NUOVO ORDINE A SINISTRA. TAGLIA ANCORA QUELLE (DOVREI RISOLVERE MA NON HO TEMPO)")
-      
-      setOrdineImpostato(rimasugliDaTagliare(ordineImpostato, pianoDiTaglioCompleto));
-      pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
-      console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
-      setPiano(pianoDiTaglioCompleto);
     }        
 
     
@@ -872,15 +867,24 @@ function App() {
         return;
       }
 
-      /*
-      // QUESTO LO METTO DENTRO ALLA PARTE NON-ACRA MODE DELLA FUNZ PIANODITAGLIO
-      setStato("Aggiungo le statistiche")
-      pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
-      console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
-      setPiano(pianoDiTaglioCompleto);
-      setStato("")
-      console.log("iterazioni: ",iterazioni)
-      */
+      if (opzioni.mode !== "acra") {
+        setStato("Aggiungo le statistiche")
+        pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
+        console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
+        setPiano(pianoDiTaglioCompleto);
+        setStato("")
+        console.log("iterazioni: ",iterazioni)
+      } else {
+        //ACRA MODE
+        //POI CONTROLLA QUANTE BARRE MANCANO.
+        setStato("HO AGGIUNTO LE BARRE DA TAGLIARE A PARTE IN UN NUOVO ORDINE A SINISTRA. TAGLIA ANCORA QUELLE (DOVREI RISOLVERE MA NON HO TEMPO)")
+        
+        setOrdineImpostato(rimasugliDaTagliare(ordineImpostato, pianoDiTaglioCompleto));
+        pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
+        console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
+        setPiano(pianoDiTaglioCompleto);
+      }
+      
 
 
       //console.log("ORDINE DELLE COSE CHE AVANZANO ALLA FINE DI TUTTO: "+ordineDelleCoseCheAvanzano)
