@@ -457,7 +457,7 @@ function App() {
     if (continua) {
       //per tot giri fissi
       for (let ondata = 0; ondata < numTagliMassimi; ondata++) {
-        //console.log("ondata "+(ondata+1)+" combs: "+tutteLeCombFunz);
+        console.log("ondata "+(ondata+1)+" combs: "+tutteLeCombFunz);
         setStato(`Sto creando tutte le combinazioni possibili tra le misure dell'ordine: Passaggio ${ondata+1} su ${numTagliMassimi}`)
         let tempArrDelleCombLength = tutteLeCombFunz.length;
         // per ogni comb esistente in precedenza
@@ -508,7 +508,7 @@ function App() {
         }
         //console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeCombFunz.length);
       }
-      //console.log(tutteLeCombFunz);
+      console.log(tutteLeCombFunz);
       return tutteLeCombFunz;
     } else {
       console.log("HAI SCELTO DI NON CONTINUARE O CMQ CONTINUA E' SU FALSE");
@@ -536,10 +536,10 @@ function App() {
   }
 
   function neHoTagliateTroppe(ordineConTaglioSimulato) {
-    //console.log("neHotagliatetroppe start: "+ordineConTaglioSimulato)
+    console.log("neHotagliatetroppe start: "+ordineConTaglioSimulato)
     for (let i = 0; i < ordineConTaglioSimulato.length; i++) {
       if (ordineConTaglioSimulato[i][0]<0) {
-        //console.log("ne ho tagliate troppe")
+        console.log("ne ho tagliate troppe sì!")
         return true
       }
     }
@@ -719,27 +719,6 @@ function App() {
     return numBarreConQuestaComb;
   }
 
-  function rimasugliDaTagliare(ordineNonClonato, piano) {
-    let ordineDuplicato = cloneDeep(ordineNonClonato);
-    for (let i = 0; i < ordineDuplicato.length; i++) {
-      let misuraDellOrdine = ordineDuplicato[i][1];
-      let quanteBarreServonoPerQuesta = ordineDuplicato[i][0];
-        for (let j = 0; j < piano.length; j++) {
-          let quanteNeTaglio = piano[j][0];
-          let arrDeiTagliDellaCombo = piano[j][2];
-          for (let k = 0; k < arrDeiTagliDellaCombo.length; k++) {
-            if (misuraDellOrdine === arrDeiTagliDellaCombo[k]) {
-              console.log(`TOLGO ${quanteNeTaglio} A ${misuraDellOrdine}, QUINDI DA `+quanteBarreServonoPerQuesta);
-              ordineDuplicato[i][0] = ordineDuplicato[i][0]-piano[j][0];
-              console.log("DOVREBBE PASSARE A: "+ordineDuplicato[i][0]);
-            }
-          }
-        }
-    }
-    console.log("ORDINE DEI RIMASUGLI: "+ordineDuplicato)
-    return ordineDuplicato;
-  }
-
   function pianoDiTaglio(ordine) {
     numeroDiVolteCheCalcoloIlPIano++;
     setPianiCalcolati(numeroDiVolteCheCalcoloIlPIano);
@@ -760,62 +739,28 @@ function App() {
       quanteBarreConQuestaComb(combMigliore, ordine);
       console.log("QUANTEBARRE ESEGUITO. ORDINE ADESSO: "+ordine);
 
-      //SPOSTATO QUI QUESTO. IMPORTANTISSIMO, LOOP DEL PIANO FINO A QUANDO TUTTO E' TAGLIATO
-      if (ordine.length > 0) {
-        pianoDiTaglio(ordine);
-      }
-
-      //ANCHE QUESTO E? STATO SPOSTATO QUI
-      setStato("Aggiungo le statistiche")
-      pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
-      console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
-      setPiano(pianoDiTaglioCompleto);
-      setStato("")
-      console.log("iterazioni: ",iterazioni)
-
-
     } else {
-      //ACRA MODE
+      //ACRA MODE - non combina misure diverse assieme
       for (let i = 0; i < arrayMisure.length; i++) {
-        console.log("ACRA MODE");
         let tempComb = [arrayMisure[i]];
         let barraRimasta =
             lungBarra -
             sum(tempComb);
-          console.log("BARRA RIMASTA: "+barraRimasta)
           while (ciStaAncora(arrayMisure[i], tempComb, barraRimasta)) {
             tempComb.push(arrayMisure[i])
-            console.log("DENTRO A PRIMO WHILE: "+tempComb);
-            barraRimasta = lungBarra -
-            sum(tempComb);
           }
-          console.log("ACRA MODE - TEMP COMB PRIMA DI PASSARE ALLE ALTRE MISURE: "+tempComb)
-          for (let j = i+1; j < arrayMisure.length; j++) {
-            while (ciStaAncora(arrayMisure[j], tempComb, barraRimasta)) {
-              tempComb.push(arrayMisure[j]);
-              barraRimasta = lungBarra -
-            sum(tempComb);
-            }
-          }
-          console.log("ACRA MODE - TEMP COMB DOPO ESSERE PASSATO ALLE ALTRE: "+tempComb)
           combMigliore = [tempComb,(lungBarra-sum(tempComb))]
           quanteBarreConQuestaComb(combMigliore, ordine)
       }
-
-      //POI CONTROLLA QUANTE BARRE MANCANO.
-      setStato("HO AGGIUNTO LE BARRE DA TAGLIARE A PARTE IN UN NUOVO ORDINE A SINISTRA. TAGLIA ANCORA QUELLE (DOVREI RISOLVERE MA NON HO TEMPO)")
-      
-      setOrdineImpostato(rimasugliDaTagliare(ordineImpostato, pianoDiTaglioCompleto));
-      pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
-      console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
-      setPiano(pianoDiTaglioCompleto);
     }        
 
-    
+    if (ordine.length > 0) {
+        pianoDiTaglio(ordine);
+    } 
   }
 
   function statistichePiano(piano) {
-    
+    setStato("Calcolo le statistiche")
     for (let i = 0; i < piano.length; i++) {
       barreUtilizzate = barreUtilizzate + piano[i][0];
       scartoTotale = scartoTotale + piano[i][4] * piano[i][0];
@@ -833,7 +778,7 @@ function App() {
 
   function pianoDiTaglioOnClick() {
     if(ordineImpostato.length>0) {
-      //clono l'ordine per lasciare l'originale inserito nell'altra sezione e poterlo consultare o rifare il piano con altre impostazioni
+      //clono l'ordine per lasciare l'originale inserito nell'altra sezione e pterlo consultare o rifare il piano con altre impostazioni
       let ordineDuplicato = cloneDeep(ordineImpostato);
       //ordineDelleCoseCheAvanzano = [];
       setPiano([]);
@@ -872,16 +817,13 @@ function App() {
         return;
       }
 
-      /*
-      // QUESTO LO METTO DENTRO ALLA PARTE NON-ACRA MODE DELLA FUNZ PIANODITAGLIO
+
       setStato("Aggiungo le statistiche")
       pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
       console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
       setPiano(pianoDiTaglioCompleto);
       setStato("")
       console.log("iterazioni: ",iterazioni)
-      */
-
 
       //console.log("ORDINE DELLE COSE CHE AVANZANO ALLA FINE DI TUTTO: "+ordineDelleCoseCheAvanzano)
       
@@ -932,7 +874,7 @@ function App() {
                 value={input}
                 onChange={impostaInputManuale}          
               />
-              <div>
+              <div className="flex">
                 <fieldset
                 className="input-reset bw0 ma0 pa0"
                 onChange={impostaInputPredefinito}
@@ -953,30 +895,27 @@ function App() {
                   <option value="ordineIntero">ordine intero (ad es. per quante barre)</option>
                 </select>
               </fieldset>
-              <br />
-                <div className="flex">
-                  <input
-                  className="input-reset ba b--black-20 pa2 db"
-                  type="button"
-                  name="switchInputOutput"
-                  onClick={outputToInput}
-                  value="Output to Input"
-                  />
-                  <input
-                  className="input-reset ba b--black-20 pa2 ml2 db"
-                  type="button"
-                  name="textToArr"
-                  onClick={fanneUnArray}
-                  value="fanne un array"
-                  />
-                  <input
-                  className="input-reset ba b--black-20 pa2 ml2 db"
-                  type="button"
-                  name="ordineToInput"
-                  onClick={ordineToInput}
-                  value="ordine->input"
-                  />
-                </div>
+              <input
+              className="input-reset ba b--black-20 pa2 ml2 db"
+              type="button"
+              name="switchInputOutput"
+              onClick={outputToInput}
+              value="Output to Input"
+              />
+              <input
+              className="input-reset ba b--black-20 pa2 ml2 db"
+              type="button"
+              name="textToArr"
+              onClick={fanneUnArray}
+              value="fanne un array"
+              />
+              <input
+              className="input-reset ba b--black-20 pa2 ml2 db"
+              type="button"
+              name="ordineToInput"
+              onClick={ordineToInput}
+              value="ordine->input"
+              />
               </div>
             <br />
             <p>
@@ -994,7 +933,7 @@ function App() {
                 value={input}
                 onChange={impostaInputManuale}          
               />*/}
-              <div>
+              <div className="flex">
               <fieldset
               className="input-reset bw0 ma0 pa0"
               onChange={impostaInputPredefinito2}
@@ -1015,23 +954,20 @@ function App() {
                 <option value="ordineIntero">ordine intero (ad es per quantebarre)</option>
               </select>
             </fieldset>
-            <br />
-            <div className="flex">
-              <input
-              className="input-reset ba b--black-20 pa2 db"
-              type="button"
-              name="switchInputOutput"
-              onClick={outputToInput2}
-              value="Output to Input"
-              />
-              <input
-              className="input-reset ba b--black-20 pa2 ml2 db"
-              type="button"
-              name="textToArr"
-              onClick={fanneUnArray}
-              value="fanne un array"
-              />
-            </div>
+            <input
+            className="input-reset ba b--black-20 pa2 ml2 db"
+            type="button"
+            name="switchInputOutput"
+            onClick={outputToInput2}
+            value="Output to Input"
+            />
+            <input
+            className="input-reset ba b--black-20 pa2 ml2 db"
+            type="button"
+            name="textToArr"
+            onClick={fanneUnArray}
+            value="fanne un array"
+            />
             </div>
             </div>
             <div>
@@ -1162,40 +1098,37 @@ function App() {
               Info usata per calcolare il numero dei pacchi necessari.
             </small>
           </label>
-          {(opzioni.mode !== "menoBarre") &&
-            <>
-            <label className="w-third pa2">
-              <strong>SCARTO MAX</strong>
-              <br />
-              <br />
-              <input
-                className="input-reset ba b--black-20 pa2 mb2 db w-100"
-                name="opzioneScarto"
-                type="number"
-                value={opzioni.maxScarto}
-                onChange={impostaOpzioni}
-              />
-              <small id="name-desc" className="f6 db mb2">
-                Lunghezza massimo scarto
-              </small>
-            </label>
-            <label className="w-third pa2">
-              <strong>SCARTO MIN</strong>
-              <br />
-              <br />
-              <input
-                className="input-reset ba b--black-20 pa2 mb2 db w-100"
-                name="opzioneSfrido"
-                type="number"
-                value={opzioni.minSfrido}
-                onChange={impostaOpzioni}
-              />
-              <small id="name-desc" className="f6 db mb2">
-                Lunghezza minima sfrido
-              </small>
-            </label>
-            </>
-          }
+
+          <label className="w-third pa2">
+            <strong>SCARTO MAX</strong>
+            <br />
+            <br />
+            <input
+              className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              name="opzioneScarto"
+              type="number"
+              value={opzioni.maxScarto}
+              onChange={impostaOpzioni}
+            />
+            <small id="name-desc" className="f6 db mb2">
+              Lunghezza massimo scarto
+            </small>
+          </label>
+          <label className="w-third pa2">
+            <strong>SCARTO MIN</strong>
+            <br />
+            <br />
+            <input
+              className="input-reset ba b--black-20 pa2 mb2 db w-100"
+              name="opzioneSfrido"
+              type="number"
+              value={opzioni.minSfrido}
+              onChange={impostaOpzioni}
+            />
+            <small id="name-desc" className="f6 db mb2">
+              Lunghezza minima sfrido
+            </small>
+          </label>
           <label className="w-third pa2">
             <strong>LAMA</strong>
             <br />
