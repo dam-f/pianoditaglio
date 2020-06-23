@@ -21,6 +21,8 @@ function App() {
 
   const [ pianoDiTaglioDaRenderizzare, setPiano ] = useState();
 
+  const [ordineRimasugli, setOrdineRimasugli ] = useState();
+
   const [sfridi, setSfridi] = useState([]);
 
   const [profilo, setProfilo] = useState("AL/1");
@@ -877,9 +879,9 @@ function App() {
       } else {
         //ACRA MODE
         //POI CONTROLLA QUANTE BARRE MANCANO.
-        setStato("HO AGGIUNTO LE BARRE DA TAGLIARE A PARTE IN UN NUOVO ORDINE A SINISTRA. TAGLIA ANCORA QUELLE (DOVREI RISOLVERE MA NON HO TEMPO)")
+        setStato("HO AGGIUNTO LE BARRE DA TAGLIARE A PARTE IN UN NUOVO ORDINE SOTTO IL PIANO. TAGLIA ANCORA QUELLE (DOVREI RISOLVERE MA NON HO TEMPO)")
         
-        setOrdineImpostato(rimasugliDaTagliare(ordineImpostato, pianoDiTaglioCompleto));
+        setOrdineRimasugli(rimasugliDaTagliare(ordineImpostato, pianoDiTaglioCompleto));
         pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
         console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
         setPiano(pianoDiTaglioCompleto);
@@ -1364,6 +1366,12 @@ function App() {
         </p>
         }
         <Pianoditaglio piano={pianoDiTaglioDaRenderizzare} profilo={profilo} mode={opzioni.mode}/>
+        <br /><br />
+        {ordineRimasugli &&
+          <>
+          <Ordine ordine={ordineRimasugli} />
+          </>
+        }
         <br /><br />
         {pianoRef}
       </div>
