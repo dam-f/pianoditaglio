@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Ordine from "./Ordine";
 import Pianoditaglio from "./Pianoditaglio";
 import { cloneDeep, sum, indexOf, clone } from 'lodash';
@@ -49,6 +49,12 @@ function App() {
 
   const [input, setInput] = useState("input prova")
   const [input2, setInput2] = useState("input 2 prova")
+
+  const textInput = useRef(null);
+
+  useEffect(() => {
+    textInput.current.focus();
+  }, []);
 
   const [output, setOutput] = useState("output prova")
 
@@ -217,6 +223,7 @@ function App() {
       steccheCorrente: "",
       misuraCorrente: ""
     });
+    textInput.current.focus();
   }
 
   function aggiungiPianoEsempio(event) {
@@ -457,7 +464,6 @@ function App() {
       aggiungiCombConMisura(arrayMisure[i]);
       tutteLeCombFunz.push(combTemp);
     }
-
     
     //ad ogni giro si passa tutte le combinazioni esistenti e aggiunge una combinazione per ogni misura dell'ordine ad ognuna di esse.
     if (continua) {
@@ -497,7 +503,11 @@ function App() {
                     }
                   }*/
                 let newComb = combAttuale.slice(0);
+                /* if (newComb.length>4) {
+                  debugger;
+                } */
                 newComb.push(misuraOrdine);
+                newComb.sort(function(a, b){return b-a});
                 tutteLeCombFunz.push(newComb);
               }
             } /*else {
@@ -530,12 +540,13 @@ function App() {
         lungBarra - sum(bestComb[0]);
       let scartoThisComb =
         lungBarra - sum(allCombs[i]);
-
-      if (scartoBestComb > scartoThisComb) {
-        //QUESTO SORT NON FUNZIONA????
-        bestComb = [allCombs[i]/*.sort(function(a, b) {
-          return b[1] - a[1];
-        })*/, scartoThisComb];
+      //console.log("BESTCOMB = "+bestComb[0]+" COMB ATTUALE: "+allCombs[i])
+      //AGGIUNGO FUNZIONE CHE ELIMINA FUNZ DUPLICATE - potenzialmente pericolosissimo
+      if (bestComb[0] === allCombs[i]) {
+        console.log("Cancello la comb "+allCombs[i]);
+        allCombs.splice(i,1);
+      } else if (scartoBestComb > scartoThisComb) {
+        bestComb = [allCombs[i], scartoThisComb];
       }
     }
     return bestComb;
@@ -832,17 +843,21 @@ function App() {
 
   //CREA PIANO
   function pianoDiTaglioOnClick() {
-    setLoading(true);
-    setTimeout(() => { 
+    if (debugVisual) {
+      pianoDiTaglioOnClickAsync();
+    } else {
+      // mostra l'animazione di oading per cinque secondi e poi blocca l'animazione e calcola la funzione (la blocca perché mentre calcola non può continuare a calcolare il render)
+      setLoading(true);
+      setTimeout(() => { 
       const promiseA = new Promise( (resolutionFunc,rejectionFunc) => {
         pianoDiTaglioOnClickAsync();
         resolutionFunc();
         });
      }, 5000);  
+    }
   }
 
   function pianoDiTaglioOnClickAsync() {
-    debugger;
     if(ordineImpostato.length>0) {
       //clono l'ordine per lasciare l'originale inserito nell'altra sezione e poterlo consultare o rifare il piano con altre impostazioni
       let ordineDuplicato = cloneDeep(ordineImpostato);
@@ -1077,6 +1092,7 @@ function App() {
               <br />
               <br />
               <input
+                ref={textInput}
                 className="input-reset ba b--black-20 pa2 mb2 db w-100"
                 type="number"
                 id="numStecche"
