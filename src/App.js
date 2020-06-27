@@ -535,7 +535,7 @@ function App() {
   function trovaCombMigliore(allCombs) {
     setStato("Sto cercando la combinazione che restituisce meno scarto")
     let bestComb = [allCombs[0]];
-    for (let i = 0; i < allCombs.length; i++) {
+    for (let i = 1; i < allCombs.length; i++) {
       let scartoBestComb =
         lungBarra - sum(bestComb[0]);
       let scartoThisComb =
@@ -543,7 +543,7 @@ function App() {
       //console.log("BESTCOMB = "+bestComb[0]+" COMB ATTUALE: "+allCombs[i])
       //AGGIUNGO FUNZIONE CHE ELIMINA FUNZ DUPLICATE - potenzialmente pericolosissimo
       if (bestComb[0] === allCombs[i]) {
-        console.log("Cancello la comb "+allCombs[i]);
+        debugVisual && console.log("Cancello la comb "+allCombs[i]);
         allCombs.splice(i,1);
       } else if (scartoBestComb > scartoThisComb) {
         bestComb = [allCombs[i], scartoThisComb];
@@ -582,7 +582,7 @@ function App() {
           if (misuraDellaComb === misuraDellOrdine) {
             ordineFittizio[j][0] = ordineFittizio[j][0]-1;
             if (quanteBarreServonoPerQuesta === 0) {
-              console.log(
+              debugVisual && console.log(
                 "Ho finito di tagliare la misura fittizia "+
                 misuraDellOrdine
               );
@@ -604,7 +604,7 @@ function App() {
   }
 
   function eliminaTutteCombContenentiMisura(misura) {
-    console.log("elimino tutte le combo con la misura "+misura+". n. combo prima di farlo: "+tutteLeComb.length)
+    debugVisual && console.log("elimino tutte le combo con la misura "+misura+". n. combo prima di farlo: "+tutteLeComb.length);
     let newTutteLeComb = [];
     for (let i = 0; i < tutteLeComb.length; i++) {
       if (!(tutteLeComb[i].includes(misura))) {
@@ -613,7 +613,7 @@ function App() {
       }      
     }
     tutteLeComb = newTutteLeComb;
-    console.log("n. combo dopo averlo fatto: "+tutteLeComb.length)
+    debugVisual && console.log("n. combo dopo averlo fatto: "+tutteLeComb.length);
   }
 
   function aggiungiBarreDaTagliareAncora(combUtilizzata, ordineFittizio) {
@@ -628,19 +628,19 @@ function App() {
 
   function quanteBarreConQuestaComb(comb, ordinePerQuanteBarre) {
 
-    console.log("FACCIO PARTIRE QUANTEBARRE. ORDINE PRIMA: "+ordinePerQuanteBarre)
+    debugVisual && console.log("FACCIO PARTIRE QUANTEBARRE. ORDINE PRIMA: "+ordinePerQuanteBarre);
 
     let numBarreConQuestaComb = 0;
     let hoFinitoDiTagliareUnaMisura = false;
     // questo arr sotto sarà riempito di arr contententi [misuradatogliere, indice misura da togliere in ordine]
     let misureFiniteDiTagliare = [];
     misuraDaTogliereDallOrdine = "";
-    console.log("SIMULO QUANTE BARRE TAGLIARE")
+    debugVisual && console.log("SIMULO QUANTE BARRE TAGLIARE");
     numBarreConQuestaComb = simulazioneTaglioComb(comb, ordinePerQuanteBarre);
     if (numBarreConQuestaComb === 0) {
-      console.log("HO DECISO DI NON TAGLIARNE.");
+      debugVisual && console.log("HO DECISO DI NON TAGLIARNE.");
     } else {
-      console.log("HO DECISO DI TAGLIARNE "+numBarreConQuestaComb);
+      debugVisual && console.log("HO DECISO DI TAGLIARNE "+numBarreConQuestaComb);
       /*
       while (!hoFinitoDiTagliareUnaMisura) {
         for (let i = 0; i < comb[0].length; i++) {
@@ -665,7 +665,7 @@ function App() {
             if (comb[0][i] === ordinePerQuanteBarre[j][1]) {
               ordinePerQuanteBarre[j][0] = ordinePerQuanteBarre[j][0] - 1;
               if (ordinePerQuanteBarre[j][0] === 0) {
-                console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
+                debugVisual && console.log("Ho finito di tagliare la misura ", ordinePerQuanteBarre[j][1]);
                 hoFinitoDiTagliareUnaMisura = true;
                 misureFiniteDiTagliare.push([ordinePerQuanteBarre[j][1], j]);
               }
@@ -715,7 +715,7 @@ function App() {
 
       //CREO UNA RIGA NEL PIANO DI TAGLIO CON QUANTE BARRE DEVO TAGLIARE CON QUESTA COMBO, LE MISURE DELLA COMBO E LO SCARTO
 
-      console.log("AGGIUNGO LA COMBO AL PIANO: "+numBarreConQuestaComb+
+      debugVisual && console.log("AGGIUNGO LA COMBO AL PIANO: "+numBarreConQuestaComb+
       "barre tagliate così: "+comb[0]+" con scarto: "+comb[1]);
       pianoDiTaglioCompleto.push([
         numBarreConQuestaComb,
@@ -724,7 +724,7 @@ function App() {
         " con scarto: ",
         comb[1]
       ]);
-      console.log("PIANO DI TAGLIO COMPLETO: "+pianoDiTaglioCompleto)
+      debugVisual && console.log("PIANO DI TAGLIO COMPLETO: "+pianoDiTaglioCompleto);
     }
     
 
@@ -746,14 +746,14 @@ function App() {
           let arrDeiTagliDellaCombo = piano[j][2];
           for (let k = 0; k < arrDeiTagliDellaCombo.length; k++) {
             if (ordineDuplicato[i][1] === arrDeiTagliDellaCombo[k]) {
-              console.log(`TOLGO ${piano[j][0]} A ${ordineDuplicato[i][1]}, QUINDI DA `+ordineDuplicato[i][0]);
+              debugVisual && console.log(`TOLGO ${piano[j][0]} A ${ordineDuplicato[i][1]}, QUINDI DA `+ordineDuplicato[i][0]);
               ordineDuplicato[i][0] = ordineDuplicato[i][0]-piano[j][0];
-              console.log("DOVREBBE PASSARE A: "+ordineDuplicato[i][0]);
+              debugVisual && console.log("DOVREBBE PASSARE A: "+ordineDuplicato[i][0]);
             }
           }
         }
     }
-    console.log("ORDINE DEI RIMASUGLI: "+ordineDuplicato)
+    debugVisual && console.log("ORDINE DEI RIMASUGLI: "+ordineDuplicato);
     let ordineDeiRimasugli = ordineDuplicato.filter(misura => misura[0]>0);
     return ordineDeiRimasugli;
   }
@@ -761,22 +761,25 @@ function App() {
   function pianoDiTaglio(ordine) {
     numeroDiVolteCheCalcoloIlPIano++;
     setPianiCalcolati(numeroDiVolteCheCalcoloIlPIano);
-    console.log("ESEGUO IL PIANO DI TAGLIO SU "+ordine+". ITERAZIONE N. "+numeroDiVolteCheCalcoloIlPIano)
+    debugVisual && console.log("ESEGUO IL PIANO DI TAGLIO SU "+JSON.stringify(ordine)+". ITERAZIONE N. "+numeroDiVolteCheCalcoloIlPIano);
     if (opzioni.mode !== "acra") {
       //QUESTO LO SPOSTO ALL'INIZIO DELL'ONCLICK
       //tutteLeComb = creaTutteLeCombPossibili(arrayMisure, inizialeOAvanzi);
       if (!continua) {
         //VIA DI FUGA SE FAI ANNULLA - QUESTO E' ANCORA DA CONTROLLARE
-        console.log("USCITI");
+        debugVisual && console.log("USCITI");
         setPiano([])
         return false;
       }
-      console.log("CERCO LA COMB MIGLIORE");
+      debugVisual && console.log("CERCO LA COMB MIGLIORE");
       combMigliore = trovaCombMigliore(tutteLeComb);
-      console.log("COMB MIGLIORE: "+combMigliore);
-      console.log("CERCO QUANTE BARRE CON QUESTA COMB");
+      /* if (combMigliore.length === 0 || !combMigliore) {
+        debugger;
+      } */
+      debugVisual && console.log("COMB MIGLIORE: "+combMigliore);
+      debugVisual && console.log("CERCO QUANTE BARRE CON QUESTA COMB");
       quanteBarreConQuestaComb(combMigliore, ordine);
-      console.log("QUANTEBARRE ESEGUITO. ORDINE ADESSO: "+ordine);
+      debugVisual && console.log("QUANTEBARRE ESEGUITO. ORDINE ADESSO: "+ordine);
 
       //SPOSTATO QUI QUESTO. IMPORTANTISSIMO, LOOP DEL PIANO FINO A QUANDO TUTTO E' TAGLIATO
       if (ordine.length > 0) {
@@ -797,19 +800,19 @@ function App() {
     } else {
       //ACRA MODE
       for (let i = 0; i < arrayMisure.length; i++) {
-        console.log("ACRA MODE");
+        debugVisual && console.log("ACRA MODE");
         let tempComb = [arrayMisure[i]];
         let barraRimasta =
             lungBarra -
             sum(tempComb);
-          console.log("BARRA RIMASTA: "+barraRimasta)
+            debugVisual && console.log("BARRA RIMASTA: "+barraRimasta);
           while (ciStaAncora(arrayMisure[i], tempComb, barraRimasta)) {
             tempComb.push(arrayMisure[i])
-            console.log("DENTRO A PRIMO WHILE: "+tempComb);
+            debugVisual && console.log("DENTRO A PRIMO WHILE: "+tempComb);
             barraRimasta = lungBarra -
             sum(tempComb);
           }
-          console.log("ACRA MODE - TEMP COMB PRIMA DI PASSARE ALLE ALTRE MISURE: "+tempComb)
+          debugVisual && console.log("ACRA MODE - TEMP COMB PRIMA DI PASSARE ALLE ALTRE MISURE: "+tempComb);
           for (let j = i+1; j < arrayMisure.length; j++) {
             while (ciStaAncora(arrayMisure[j], tempComb, barraRimasta)) {
               tempComb.push(arrayMisure[j]);
@@ -817,7 +820,7 @@ function App() {
             sum(tempComb);
             }
           }
-          console.log("ACRA MODE - TEMP COMB DOPO ESSERE PASSATO ALLE ALTRE: "+tempComb)
+          debugVisual && console.log("ACRA MODE - TEMP COMB DOPO ESSERE PASSATO ALLE ALTRE: "+tempComb);
           combMigliore = [tempComb,(lungBarra-sum(tempComb))]
           quanteBarreConQuestaComb(combMigliore, ordine)
       }
@@ -853,7 +856,7 @@ function App() {
         pianoDiTaglioOnClickAsync();
         resolutionFunc();
         });
-     }, 5000);  
+     }, 4800);  
     }
   }
 
@@ -864,7 +867,7 @@ function App() {
       //ordineDelleCoseCheAvanzano = [];
       setPiano([]);
       setStato("Resetto le variabili")
-      console.log("RESETTO VARIABILI")
+      debugVisual && console.log("RESETTO VARIABILI");
       // VARIABILI NON MONITORATE
 
       iterazioni = 0;
@@ -885,27 +888,27 @@ function App() {
       }
 
       setStato("Clono l'ordine")
-      console.log("CREO ARRAY MISURE");
+      debugVisual && console.log("CREO ARRAY MISURE");
       arrayMisure = creaArrayDecrescenteMisure(ordineDuplicato);
-      console.log("ARRAY MISURE: "+arrayMisure);
-      console.log("CREO TUTTE LE COMBO");
+      debugVisual && console.log("ARRAY MISURE: "+arrayMisure);
+      debugVisual && console.log("CREO TUTTE LE COMBO");
       tutteLeComb = creaTutteLeCombPossibili(arrayMisure);
-      console.log("NUMERO COMBO CREATE: "+tutteLeComb.length);
+      debugVisual && console.log("NUMERO COMBO CREATE: "+tutteLeComb.length);
       //ESEGUO IL PIANO IN LOOP
       if(pianoDiTaglio(ordineDuplicato) === false) {
         // (PIANO DI FUGA SE FACCIO ANNULLA)
-        console.log("ESCO DIBRUTTO DALLA FUNZ INIZIALE")
+        debugVisual && console.log("ESCO DIBRUTTO DALLA FUNZ INIZIALE");
         return;
       }
 
       if (opzioni.mode !== "acra") {
         setStato("Aggiungo le statistiche")
         pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
-        console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
+        debugVisual && console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
         setLoading(false);
         setPiano(pianoDiTaglioCompleto);
         setStato("")
-        console.log("iterazioni: ",iterazioni)
+        debugVisual && console.log("iterazioni: ",iterazioni);
       } else {
         //ACRA MODE
         //POI CONTROLLA QUANTE BARRE MANCANO.
@@ -913,7 +916,7 @@ function App() {
         
         setOrdineRimasugli(rimasugliDaTagliare(ordineImpostato, pianoDiTaglioCompleto));
         pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
-        console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
+        debugVisual && console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
         setLoading(false);
         setPiano(pianoDiTaglioCompleto);
       }
