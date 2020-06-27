@@ -4,13 +4,17 @@ import Pianoditaglio from "./Pianoditaglio";
 import { cloneDeep, sum, indexOf, clone } from 'lodash';
 //da togliere poi questo sotto:
 import { inputTutteComb } from "./tutteComb";
-//import "./logoANIMATO.svg";
-
+//import Logo from "./Logo";
+//import Icon from "./Icon";
+import Logo from "./logo4css.svg";
 
 //AGGIUNGERE GESTIONE SFRIDI
 
 function App() {
   //VARIABILI CONTROLLATE NELLO STATE
+
+
+  const [ loading, setLoading ] = useState(false);
 
   const [teloCorrente, setTeloCorrente] = useState({
     steccheCorrente: "",
@@ -19,7 +23,7 @@ function App() {
 
   const [ordineImpostato, setOrdineImpostato] = useState([]);
 
-  const [ pianoDiTaglioDaRenderizzare, setPiano ] = useState();
+  const [ pianoDiTaglioDaRenderizzare, setPiano ] = useState([]);
 
   const [ordineRimasugli, setOrdineRimasugli ] = useState();
 
@@ -827,8 +831,18 @@ function App() {
   }
 
   //CREA PIANO
-
   function pianoDiTaglioOnClick() {
+    setLoading(true);
+    setTimeout(() => { 
+      const promiseA = new Promise( (resolutionFunc,rejectionFunc) => {
+        pianoDiTaglioOnClickAsync();
+        resolutionFunc();
+        });
+     }, 5000);  
+  }
+
+  function pianoDiTaglioOnClickAsync() {
+    debugger;
     if(ordineImpostato.length>0) {
       //clono l'ordine per lasciare l'originale inserito nell'altra sezione e poterlo consultare o rifare il piano con altre impostazioni
       let ordineDuplicato = cloneDeep(ordineImpostato);
@@ -873,6 +887,7 @@ function App() {
         setStato("Aggiungo le statistiche")
         pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
         console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
+        setLoading(false);
         setPiano(pianoDiTaglioCompleto);
         setStato("")
         console.log("iterazioni: ",iterazioni)
@@ -884,6 +899,7 @@ function App() {
         setOrdineRimasugli(rimasugliDaTagliare(ordineImpostato, pianoDiTaglioCompleto));
         pianoDiTaglioCompleto.unshift(statistichePiano(pianoDiTaglioCompleto));
         console.log("PIANO DI TAGLIO DOPO AVER AGGIUNTO LE STATISTICHE: "+pianoDiTaglioCompleto);
+        setLoading(false);
         setPiano(pianoDiTaglioCompleto);
       }
       
@@ -893,7 +909,6 @@ function App() {
       
     }
   }
-
 
   
   //FUNZIONI DEI TEST
@@ -1357,6 +1372,11 @@ function App() {
             value="CREA PIANO"
           />
         </p>
+        <>
+          {loading && 
+            <object type="image/svg+xml" data={Logo}>svg-animation</object>
+          }
+        </>
         <p className="tc b">
           {stato}
         </p>
@@ -1365,7 +1385,10 @@ function App() {
           Piani Calcolati: {pianiCalcolati}
         </p>
         }
+        <> {pianoDiTaglioDaRenderizzare.length>0 &&
         <Pianoditaglio piano={pianoDiTaglioDaRenderizzare} profilo={profilo} mode={opzioni.mode}/>
+        }</>
+        
         <br /><br />
         {ordineRimasugli &&
           <>

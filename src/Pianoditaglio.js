@@ -39,7 +39,7 @@ function Pianoditaglio(props) {
 
   if (props.piano) {
     const piano = props.piano;
-
+    debugger;
     const barrePianoUtilizzate = piano[0][1];
     const scartoPianoTotale = piano[0][3];
     const pacchiNecessari = Math.floor(barrePianoUtilizzate / barreNeiPacchi);
