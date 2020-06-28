@@ -2,6 +2,8 @@
 
 DA FARE ADESSO:
 
+- moltiplicare tutte le misure per 100 all'inizio perché è tutto molto più performante (problemi floating points), dividere tutto alla fine
+
 - dopo aver scelto le combo migliori vanno messe in ordine di misura 
 
 - la variabile predefinita del piano di taglio deve essere [] e sostituire il momento in cui viene creata nella funzione con un push, in modo da supportare questo:

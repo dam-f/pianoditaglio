@@ -67,6 +67,8 @@ function Pianoditaglio(props) {
             <strong>{barreNecessarieOltreAiPacchi}</strong> stecche) - Modalità: <strong>{mode}</strong>
             <br />
             <br />
+            <p>Scarto totale sull'intero ordine: {Math.round(scartoPianoTotale * 100 + Number.EPSILON) /
+          100} cm</p>
           </div>
           {pianoPerRender.map(creaComponenteMisura)}
           {typeof piano[piano.length-2] === "string" && <div className="bb b--black-30 pl3 pr3"><br />
@@ -80,7 +82,7 @@ function Pianoditaglio(props) {
           </div>}
         </div>
         {/*La statistica dello scarto sarà riattivata solo quando verrano contati solo gli scarti minori del maxScarto*/}
-        {/*<p>Scarto totale sull'intero ordine: {scartoPianoTotale}</p>*/}
+        
         {/*<p>props.piano.map(creaComponenteMisura)</p>*/}
       </div>
     );
