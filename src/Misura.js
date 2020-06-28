@@ -8,9 +8,9 @@ function Misura(props) {
         <strong>{props.misuraStecca}</strong> cm
       </p>
 
-      <small className="">
+      {/* <small className="">
         <input className="" type="button" value="elimina" />
-      </small>
+      </small> */}
     </div>
   );
 }

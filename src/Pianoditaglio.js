@@ -15,14 +15,17 @@ let exampleOutput = [
 */
 
 function Pianoditaglio(props) {
+
+  let idComb = 0;
+
   function creaComponenteMisura(comb) {
-    if (comb[0] !== 0) {
-      return <MisuraPiano combPiano={comb} />;
-    }
+      idComb++;
+      return <MisuraPiano combPiano={comb} key={"idComb"+idComb}/>;
   }
 
   let profilo = props.profilo;
   let barreNeiPacchi = 0;
+  
 
   if (profilo === "AL/1") {
     barreNeiPacchi = 50;
@@ -36,7 +39,6 @@ function Pianoditaglio(props) {
 
   if (props.piano) {
     const piano = props.piano;
-
     const barrePianoUtilizzate = piano[0][1];
     const scartoPianoTotale = piano[0][3];
     const pacchiNecessari = Math.floor(barrePianoUtilizzate / barreNeiPacchi);
@@ -50,23 +52,26 @@ function Pianoditaglio(props) {
     //console.log(pianoPerRender);
 
     pianoPerRender.shift();
-    pianoPerRender.pop();
-    pianoPerRender.pop();
+    //pianoPerRender.pop();
+    //pianoPerRender.pop();
 
     //FARE UNA FUNZIONE che si passa le stecche avanzate da tagliare e riunisce le misure guali con un 3x davanti (se ad es. la misura è ripetuta 3 volte). for loop con se le due misure sono uguali una viene splice-ata e l'altra si aggiunge un numx dove il nume parte da 1(x tutte le misure, in automatico, e poi aggiunge a num++)
 
     return (
       <div>
         <div className="bg-white pa2 br4 pb4 bb bw2">
-          <p className="tc bb b--black-30">
+          <br />
+          <div className="tc bb b--black-30">
             BARRE NECESSARIE: <strong>{barrePianoUtilizzate}</strong> (
             <strong>{pacchiNecessari}</strong> pacchi e{" "}
             <strong>{barreNecessarieOltreAiPacchi}</strong> stecche) - Modalità: <strong>{mode}</strong>
             <br />
             <br />
-          </p>
+            <p>Scarto totale sull'intero ordine: {Math.round(scartoPianoTotale * 100 + Number.EPSILON) /
+          100} cm</p>
+          </div>
           {pianoPerRender.map(creaComponenteMisura)}
-          {typeof piano[piano.length-2] === "string" && <p className="bb b--black-30 pl3 pr3">
+          {typeof piano[piano.length-2] === "string" && <div className="bb b--black-30 pl3 pr3"><br />
             Poi, cerca tra gli sfridi qualcosa per tagliare ancora queste
             stecche:
             <br />
@@ -74,11 +79,11 @@ function Pianoditaglio(props) {
             <strong>{piano[piano.length - 1].flat().join(' ')}</strong>
             <br />
             <br />
-          </p>}
+          </div>}
         </div>
         {/*La statistica dello scarto sarà riattivata solo quando verrano contati solo gli scarti minori del maxScarto*/}
-        {/*<p>Scarto totale sull'intero ordine: {scartoPianoTotale}</p>*/}
-        <p>{/*props.piano.map(creaComponenteMisura)*/}</p>
+        
+        {/*<p>props.piano.map(creaComponenteMisura)</p>*/}
       </div>
     );
   } else {

@@ -1,8 +1,11 @@
 import React from "react";
 import Misura from "./Misura";
 
+let idMisOrd = 0;
+
 function creaComponenteMisura(mis) {
-  return <Misura numStecche={mis[0]} misuraStecca={mis[1]} />;
+  idMisOrd++;
+  return <Misura numStecche={mis[0]} misuraStecca={mis[1]} key={"misOrd"+idMisOrd}/>;
 }
 
 function Ordine(props) {
