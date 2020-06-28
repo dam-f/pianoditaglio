@@ -313,6 +313,7 @@ function App() {
     setInput(output);
   }
 
+
   function impostaInputPredefinito(event) {
     const newValue = event.target.value;
     if (newValue === "inputTrovaTutteCombo") {
@@ -699,6 +700,7 @@ function App() {
 
     //TOLGO LA COMB DA TUTTE LE COMB
     tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1)
+
 
 
     return numBarreConQuestaComb;
