@@ -91,7 +91,7 @@ function App() {
         return {
           maxScarto: prevValue.maxScarto,
           minSfrido: prevValue.minSfrido,
-          larghezzaLama: newValue,
+          larghezzaLama: parseFloat(newValue),
           mode: prevValue.mode
         };
       }
@@ -107,12 +107,48 @@ function App() {
     const newValue = event.target.value;
     if (newValue === "AL/1") {
       setProfilo("AL/1");
+      setOpzioni(prevValue => {
+        return {
+          maxScarto: prevValue.maxScarto,
+          minSfrido: prevValue.minSfrido,
+          larghezzaLama: 0.5,
+          mode: prevValue.mode
+        };
+      }
+    );
     } else if (newValue === "AC/6") {
       setProfilo("AC/6");
+      setOpzioni(prevValue => {
+          return {
+            maxScarto: prevValue.maxScarto,
+            minSfrido: prevValue.minSfrido,
+            larghezzaLama: 0.2,
+            mode: prevValue.mode
+          };
+        }
+      );
     } else if (newValue === "AL/2HD") {
       setProfilo("AL/2HD");
+      setOpzioni(prevValue => {
+        return {
+          maxScarto: prevValue.maxScarto,
+          minSfrido: prevValue.minSfrido,
+          larghezzaLama: 0.5,
+          mode: prevValue.mode
+        };
+      }
+    );
     } else if (newValue === "AL/2") {
       setProfilo("AL/2");
+      setOpzioni(prevValue => {
+        return {
+          maxScarto: prevValue.maxScarto,
+          minSfrido: prevValue.minSfrido,
+          larghezzaLama: 0.5,
+          mode: prevValue.mode
+        };
+      }
+    );
     }
   }
 
