@@ -65,6 +65,7 @@ function App() {
   // VAR NON USESTATE
 
   let misuraDuplicataIndex = false;
+  let comboEliminate = [];
 
   //FUNZIONI PER CAMBIARE LE VARIABILI NELLO STATO
 
@@ -527,6 +528,7 @@ function App() {
         //console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeCombFunz.length);
       }
       //console.log(tutteLeCombFunz);
+      console.log("NUMERO DI COMBINAZIONI CALCOLATE: "+tutteLeCombFunz.length)
       return tutteLeCombFunz;
     } else {
       console.log("HAI SCELTO DI NON CONTINUARE O CMQ CONTINUA E' SU FALSE");
@@ -617,7 +619,11 @@ function App() {
       if (!(tutteLeComb[i].includes(misura))) {
         //console.log("questa la posso tenere: "+tutteLeComb[i]);
         newTutteLeComb.push(tutteLeComb[i]);
-      }      
+      } else {
+        if (debugVisual) {
+          comboEliminate.push(tutteLeComb[i]);
+        }
+      }    
     }
     tutteLeComb = newTutteLeComb;
     debugVisual && console.log("n. combo dopo averlo fatto: "+tutteLeComb.length);
@@ -699,7 +705,8 @@ function App() {
 
 
     //TOLGO LA COMB DA TUTTE LE COMB
-    tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1)
+    comboEliminate.push(tutteLeComb.indexOf(comb[0]));
+    tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1);
 
 
 
