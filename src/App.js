@@ -65,6 +65,7 @@ function App() {
   // VAR NON USESTATE
 
   let misuraDuplicataIndex = false;
+  let comboEliminate = [];
 
   //FUNZIONI PER CAMBIARE LE VARIABILI NELLO STATO
 
@@ -90,7 +91,7 @@ function App() {
         return {
           maxScarto: prevValue.maxScarto,
           minSfrido: prevValue.minSfrido,
-          larghezzaLama: newValue,
+          larghezzaLama: parseFloat(newValue),
           mode: prevValue.mode
         };
       }
@@ -106,12 +107,48 @@ function App() {
     const newValue = event.target.value;
     if (newValue === "AL/1") {
       setProfilo("AL/1");
+      setOpzioni(prevValue => {
+        return {
+          maxScarto: prevValue.maxScarto,
+          minSfrido: prevValue.minSfrido,
+          larghezzaLama: 0.5,
+          mode: prevValue.mode
+        };
+      }
+    );
     } else if (newValue === "AC/6") {
       setProfilo("AC/6");
+      setOpzioni(prevValue => {
+          return {
+            maxScarto: prevValue.maxScarto,
+            minSfrido: prevValue.minSfrido,
+            larghezzaLama: 0.2,
+            mode: prevValue.mode
+          };
+        }
+      );
     } else if (newValue === "AL/2HD") {
       setProfilo("AL/2HD");
+      setOpzioni(prevValue => {
+        return {
+          maxScarto: prevValue.maxScarto,
+          minSfrido: prevValue.minSfrido,
+          larghezzaLama: 0.5,
+          mode: prevValue.mode
+        };
+      }
+    );
     } else if (newValue === "AL/2") {
       setProfilo("AL/2");
+      setOpzioni(prevValue => {
+        return {
+          maxScarto: prevValue.maxScarto,
+          minSfrido: prevValue.minSfrido,
+          larghezzaLama: 0.5,
+          mode: prevValue.mode
+        };
+      }
+    );
     }
   }
 
@@ -527,6 +564,7 @@ function App() {
         //console.log("GIRO: ",ondata, "NUMERO COMBO: ",tutteLeCombFunz.length);
       }
       //console.log(tutteLeCombFunz);
+      console.log("NUMERO DI COMBINAZIONI CALCOLATE: "+tutteLeCombFunz.length)
       return tutteLeCombFunz;
     } else {
       console.log("HAI SCELTO DI NON CONTINUARE O CMQ CONTINUA E' SU FALSE");
@@ -617,7 +655,11 @@ function App() {
       if (!(tutteLeComb[i].includes(misura))) {
         //console.log("questa la posso tenere: "+tutteLeComb[i]);
         newTutteLeComb.push(tutteLeComb[i]);
-      }      
+      } else {
+        if (debugVisual) {
+          comboEliminate.push(tutteLeComb[i]);
+        }
+      }    
     }
     tutteLeComb = newTutteLeComb;
     debugVisual && console.log("n. combo dopo averlo fatto: "+tutteLeComb.length);
@@ -699,7 +741,8 @@ function App() {
 
 
     //TOLGO LA COMB DA TUTTE LE COMB
-    tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1)
+    comboEliminate.push(tutteLeComb.indexOf(comb[0]));
+    tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1);
 
 
 
