@@ -62,10 +62,11 @@ function App() {
 
   const [pianiCalcolati, setPianiCalcolati] = useState(0);
 
+  const [comboEliminate, setComboEliminate ] = useState([]);
+
   // VAR NON USESTATE
 
   let misuraDuplicataIndex = false;
-  let comboEliminate = [];
 
   //FUNZIONI PER CAMBIARE LE VARIABILI NELLO STATO
 
@@ -657,7 +658,10 @@ function App() {
         newTutteLeComb.push(tutteLeComb[i]);
       } else {
         if (debugVisual) {
-          comboEliminate.push(tutteLeComb[i]);
+          let newValForComboEliminate = clone(comboEliminate);
+          newValForComboEliminate.push(tutteLeComb[i]);
+          setComboEliminate(newValForComboEliminate);
+          //comboEliminate.push(tutteLeComb[i]);
         }
       }    
     }
@@ -741,7 +745,12 @@ function App() {
 
 
     //TOLGO LA COMB DA TUTTE LE COMB
-    comboEliminate.push(tutteLeComb.indexOf(comb[0]));
+    /* if (debugVisual) {
+      let newValForComboEliminate = clone(comboEliminate);
+      newValForComboEliminate.push(tutteLeComb[tutteLeComb.indexOf(comb[0])]);
+      setComboEliminate(newValForComboEliminate);
+    } */
+    //comboEliminate.push(tutteLeComb.indexOf(comb[0]));
     tutteLeComb.splice(tutteLeComb.indexOf(comb[0]),1);
 
 
@@ -949,7 +958,9 @@ function App() {
         setPiano(pianoDiTaglioCompleto);
       }
       
-
+      if (debugVisual) {
+        console.log(comboEliminate);
+      }
 
       //console.log("ORDINE DELLE COSE CHE AVANZANO ALLA FINE DI TUTTO: "+ordineDelleCoseCheAvanzano)
       
