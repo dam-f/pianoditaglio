@@ -9,7 +9,7 @@
   "main": "src/index.js",
   "homepage": "./",
   "dependencies": {
-    "lodash": "4.17.19",
+    "lodash": "4.17.21",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-scripts": "3.0.1",
